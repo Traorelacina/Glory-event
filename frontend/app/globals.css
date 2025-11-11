@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #091F31;   /* NAVY PRO */
+  --color-secondary: #C9A227; /* GOLD PREMIUM */
+  --color-accent: #DDE1E7;    /* GREY UI */
+  --color-dark: #091F31;      /* same navy for coherence */
+  --color-light: #F5F6FA;     /* BACKGROUND SOFT */
+
+  --font-inter: var(--font-inter);
+  --font-playfair: var(--font-playfair);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  background-color: var(--color-primary);
+  color: var(--color-light);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair), serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-secondary);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .text-primary {
+    color: var(--color-primary);
+  }
+  
+  .text-secondary {
+    color: var(--color-secondary);
+  }
+  
+  .text-accent {
+    color: var(--color-accent);
+  }
+  
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+  
+  .bg-secondary {
+    background-color: var(--color-secondary);
+  }
+  
+  .bg-accent {
+    background-color: var(--color-accent);
+  }
+  
+  .bg-dark {
+    background-color: var(--color-dark);
+  }
+  
+  .border-secondary {
+    border-color: var(--color-secondary);
+  }
+  
+  .border-accent {
+    border-color: var(--color-accent);
+  }
+  
+  .gradient-gold {
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+  }
+  
+  .gradient-overlay {
+    background: linear-gradient(180deg, rgba(26, 26, 46, 0) 0%, rgba(26, 26, 46, 0.9) 100%);
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .btn-primary {
+    @apply px-6 py-3 bg-secondary text-primary font-semibold rounded-lg 
+           hover:bg-accent transition-all duration-300 transform hover:scale-105;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 bg-transparent border-2 border-secondary text-secondary 
+           font-semibold rounded-lg hover:bg-secondary hover:text-primary 
+           transition-all duration-300;
+  }
+  
+  .section-title {
+    @apply text-4xl md:text-5xl font-bold text-secondary mb-4;
+  }
+  
+  .section-subtitle {
+    @apply text-lg md:text-xl text-gray-300 mb-8;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 transform hover:scale-105 hover:shadow-2xl;
+  }
+}
