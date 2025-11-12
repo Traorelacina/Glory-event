@@ -34,6 +34,12 @@ Route::get('/produits/featured', [ProduitController::class, 'featured']);
 Route::get('/produits/category/{category}', [ProduitController::class, 'byCategory']);
 Route::get('/produits/{slug}', [ProduitController::class, 'show']);
 
+Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
+
+    Route::post('/produits', [ProduitController::class, 'store']);
+    Route::delete('/produits/{id}', [ProduitController::class, 'destroy']);
+});
+ Route::get('/admin/contacts', [AdminController::class, 'recentContacts']);
 Route::get('/portfolio', [PortfolioController::class, 'index']);
 Route::get('/portfolio/featured', [PortfolioController::class, 'featured']);
 Route::get('/portfolio/category/{category}', [PortfolioController::class, 'byCategory']);

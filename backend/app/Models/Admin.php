@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Admin extends Model
+class Admin extends Authenticatable
 {
     use HasFactory, HasApiTokens, Notifiable;
 
@@ -42,7 +42,7 @@ class Admin extends Model
     ];
 
     /**
-     * Vérifier si l'admin a le rôle administrateur
+     * Vérifie si l'admin a le rôle administrateur
      */
     public function isAdmin(): bool
     {
@@ -50,7 +50,7 @@ class Admin extends Model
     }
 
     /**
-     * Vérifier si l'admin a le rôle éditeur
+     * Vérifie si l'admin a le rôle éditeur
      */
     public function isEditor(): bool
     {
@@ -58,7 +58,7 @@ class Admin extends Model
     }
 
     /**
-     * Vérifier si l'admin est actif
+     * Vérifie si l'admin est actif
      */
     public function isActive(): bool
     {
