@@ -40,12 +40,16 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::delete('/produits/{id}', [ProduitController::class, 'destroy']);
 });
  Route::get('/admin/contacts', [AdminController::class, 'recentContacts']);
+ Route::delete('/admin/contacts/{id}', [ContactController::class, 'destroy']);
+ // Marquer comme lu/non lu
+Route::put('/admin/contacts/{id}/read', [ContactController::class, 'markAsRead']);
 Route::get('/portfolio', [PortfolioController::class, 'index']);
 Route::get('/portfolio/featured', [PortfolioController::class, 'featured']);
 Route::get('/portfolio/category/{category}', [PortfolioController::class, 'byCategory']);
 Route::get('/portfolio/{id}', [PortfolioController::class, 'show']);
 
-Route::post('/contact', [ContactController::class, 'store']);
+Route::post('/contacts', [ContactController::class, 'store']);
+
 Route::post('/commandes', [CommandeController::class, 'store']);
 Route::get('/commandes/{id}', [CommandeController::class, 'show']);
 
@@ -61,10 +65,12 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::get('/commandes/{id}', [AdminController::class, 'showCommande']);
     Route::put('/commandes/{id}', [AdminController::class, 'updateCommande']);
     Route::delete('/commandes/{id}', [AdminController::class, 'destroyCommande']);
+    Route::get('/commandes/{id}', [CommandeController::class, 'show']);
     
     // Product management
-    Route::get('/produits', [AdminController::class, 'produits']);
-    Route::post('/produits', [AdminController::class, 'storeProduit']);
-    Route::put('/produits/{id}', [AdminController::class, 'updateProduit']);
-    Route::delete('/produits/{id}', [AdminController::class, 'destroyProduit']);
+    // Product management - Utilisez ProduitController au lieu d'AdminController
+    Route::get('/produits', [ProduitController::class, 'index']);
+    Route::post('/produits', [ProduitController::class, 'store']);
+    Route::put('/produits/{id}', [ProduitController::class, 'update']);
+    Route::delete('/produits/{id}', [ProduitController::class, 'destroy']);
 });

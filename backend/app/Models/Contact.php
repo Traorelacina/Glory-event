@@ -11,10 +11,15 @@ class Contact extends Model
 
     protected $fillable = [
         'name',
-        'email',
+        'email', 
         'phone',
         'subject',
         'message',
-        'service'
+        'service',
+        'is_read' // Ajoutez cette ligne
+    ];
+
+    protected $casts = [
+        'is_read' => 'boolean',
     ];
 }

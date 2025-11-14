@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { Event } from '../types';
+import Footer from '../components/Footer';
 
-export default function GalleryPage() {
+interface GalleryPageProps {
+  onNavigate: (page: string) => void;
+}
+
+export default function GalleryPage({ onNavigate }: GalleryPageProps) {
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
 
   const events: Event[] = [
@@ -75,90 +80,95 @@ export default function GalleryPage() {
       : events.filter((event) => event.type === selectedFilter);
 
   return (
-    <div className="min-h-screen pt-24 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="font-serif text-5xl md:text-6xl font-bold text-[#111827] mb-6">
-            Galerie Événements
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Découvrez nos créations et laissez-vous inspirer par nos réalisations passées
-          </p>
-        </div>
-
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {filters.map((filter) => (
-            <button
-              key={filter}
-              onClick={() => setSelectedFilter(filter)}
-              className={`px-6 py-3 rounded-full font-medium transition-all ${
-                selectedFilter === filter
-                  ? 'bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 shadow'
-              }`}
-            >
-              {filter === 'all' ? 'Tous' : filter}
-            </button>
-          ))}
-        </div>
-
-        <div className="space-y-16">
-          {filteredEvents.map((event, index) => (
-            <div
-              key={event.id}
-              className="bg-white rounded-3xl shadow-lg overflow-hidden transform hover:shadow-2xl transition-shadow duration-300"
-            >
-              <div className={`grid md:grid-cols-2 gap-0 ${index % 2 === 1 ? 'md:grid-flow-dense' : ''}`}>
-                <div className={`p-8 md:p-12 flex flex-col justify-center ${index % 2 === 1 ? 'md:col-start-2' : ''}`}>
-                  <span className="inline-block px-4 py-2 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white rounded-full text-sm font-medium mb-4 w-fit">
-                    {event.type}
-                  </span>
-                  <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#111827] mb-4">
-                    {event.title}
-                  </h2>
-                  <p className="text-gray-600 text-lg mb-6">
-                    {new Date(event.date).toLocaleDateString('fr-FR', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
-                  <p className="text-gray-600 leading-relaxed">
-                    Un événement mémorable orchestré avec passion et professionnalisme.
-                    Chaque détail a été pensé pour créer une expérience unique et inoubliable.
-                  </p>
-                </div>
-
-                <div className={`grid grid-cols-2 gap-2 p-4 ${index % 2 === 1 ? 'md:col-start-1' : ''}`}>
-                  {event.images.map((image, idx) => (
-                    <div
-                      key={idx}
-                      className={`relative overflow-hidden rounded-xl group cursor-pointer ${
-                        idx === 0 ? 'col-span-2 h-80' : 'h-48'
-                      }`}
-                    >
-                      <img
-                        src={image}
-                        alt={`${event.title} ${idx + 1}`}
-                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {filteredEvents.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-xl text-gray-500">
-              Aucun événement trouvé pour cette catégorie
+    <div className="min-h-screen bg-gray-50">
+      <div className="pt-24 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h1 className="font-serif text-5xl md:text-6xl font-bold text-[#111827] mb-6">
+              Galerie Événements
+            </h1>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Découvrez nos créations et laissez-vous inspirer par nos réalisations passées
             </p>
           </div>
-        )}
+
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
+            {filters.map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setSelectedFilter(filter)}
+                className={`px-6 py-3 rounded-full font-medium transition-all ${
+                  selectedFilter === filter
+                    ? 'bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white shadow-lg'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 shadow'
+                }`}
+              >
+                {filter === 'all' ? 'Tous' : filter}
+              </button>
+            ))}
+          </div>
+
+          <div className="space-y-16">
+            {filteredEvents.map((event, index) => (
+              <div
+                key={event.id}
+                className="bg-white rounded-3xl shadow-lg overflow-hidden transform hover:shadow-2xl transition-shadow duration-300"
+              >
+                <div className={`grid md:grid-cols-2 gap-0 ${index % 2 === 1 ? 'md:grid-flow-dense' : ''}`}>
+                  <div className={`p-8 md:p-12 flex flex-col justify-center ${index % 2 === 1 ? 'md:col-start-2' : ''}`}>
+                    <span className="inline-block px-4 py-2 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white rounded-full text-sm font-medium mb-4 w-fit">
+                      {event.type}
+                    </span>
+                    <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#111827] mb-4">
+                      {event.title}
+                    </h2>
+                    <p className="text-gray-600 text-lg mb-6">
+                      {new Date(event.date).toLocaleDateString('fr-FR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </p>
+                    <p className="text-gray-600 leading-relaxed">
+                      Un événement mémorable orchestré avec passion et professionnalisme.
+                      Chaque détail a été pensé pour créer une expérience unique et inoubliable.
+                    </p>
+                  </div>
+
+                  <div className={`grid grid-cols-2 gap-2 p-4 ${index % 2 === 1 ? 'md:col-start-1' : ''}`}>
+                    {event.images.map((image, idx) => (
+                      <div
+                        key={idx}
+                        className={`relative overflow-hidden rounded-xl group cursor-pointer ${
+                          idx === 0 ? 'col-span-2 h-80' : 'h-48'
+                        }`}
+                      >
+                        <img
+                          src={image}
+                          alt={`${event.title} ${idx + 1}`}
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {filteredEvents.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-xl text-gray-500">
+                Aucun événement trouvé pour cette catégorie
+              </p>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Footer */}
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 }

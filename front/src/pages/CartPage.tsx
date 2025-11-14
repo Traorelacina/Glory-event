@@ -1,41 +1,104 @@
 import { useState } from 'react';
-import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, Loader, AlertCircle, X } from 'lucide-react';
 import { useCartStore } from '../store/cartStore';
-import { OrderForm } from '../types';
 
 interface CartPageProps {
   onNavigate: (page: string) => void;
 }
 
+// API URL
+const API_URL = 'http://127.0.0.1:8000/api';
+const STORAGE_URL = 'http://127.0.0.1:8000/storage';
+
 export default function CartPage({ onNavigate }: CartPageProps) {
   const { items, updateQuantity, removeItem, getTotalPrice, clearCart } = useCartStore();
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
-  const [formData, setFormData] = useState<OrderForm>({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    message: '',
-    items: [],
-  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmitOrder = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => {
-      clearCart();
-      setIsOrderFormOpen(false);
-      setIsSubmitted(false);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        address: '',
-        message: '',
-        items: [],
+  const [formData, setFormData] = useState({
+    client_name: '',
+    client_email: '',
+    client_phone: '',
+  });
+
+  // Fonction pour obtenir l'URL complète de l'image
+  const getImageUrl = (imagePath: string) => {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('http')) return imagePath;
+    return `${STORAGE_URL}/${imagePath}`;
+  };
+
+  // Image de secours en SVG
+  const getFallbackImage = () => {
+    return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23f3f4f6" width="200" height="200"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="14" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage%3C/text%3E%3C/svg%3E';
+  };
+
+  const handleSubmitOrder = async () => {
+    // Validation
+    if (!formData.client_name || !formData.client_email || !formData.client_phone) {
+      setError('Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+
+    // Validation email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.client_email)) {
+      setError('Veuillez entrer une adresse email valide');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const orderData = {
+        client_name: formData.client_name.trim(),
+        client_email: formData.client_email.trim(),
+        client_phone: formData.client_phone.trim(),
+        produits: items.map(item => ({
+          id: item.id,
+          quantity: item.quantity
+        }))
+      };
+
+      const response = await fetch(`${API_URL}/commandes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(orderData),
       });
-    }, 2000);
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Erreur lors de la création de la commande');
+      }
+
+      setIsSubmitted(true);
+      
+      // Redirection après succès
+      setTimeout(() => {
+        clearCart();
+        setIsOrderFormOpen(false);
+        setIsSubmitted(false);
+        setFormData({
+          client_name: '',
+          client_email: '',
+          client_phone: '',
+        });
+        onNavigate('boutique');
+      }, 3000);
+
+    } catch (err: any) {
+      console.error('Order submission error:', err);
+      setError(err.message || 'Erreur lors de la création de la commande');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (items.length === 0) {
@@ -43,7 +106,7 @@ export default function CartPage({ onNavigate }: CartPageProps) {
       <div className="min-h-screen pt-24 pb-20 flex items-center justify-center">
         <div className="text-center">
           <ShoppingBag className="w-24 h-24 mx-auto mb-6 text-gray-300" />
-          <h2 className="font-serif text-3xl font-bold text-[#111827] mb-4">
+          <h2 className="font-serif text-3xl font-bold text-gray-900 mb-4">
             Votre panier est vide
           </h2>
           <p className="text-gray-600 mb-8">
@@ -51,7 +114,7 @@ export default function CartPage({ onNavigate }: CartPageProps) {
           </p>
           <button
             onClick={() => onNavigate('boutique')}
-            className="bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white px-8 py-4 rounded-full font-medium hover:shadow-lg transition-all"
+            className="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-8 py-4 rounded-full font-medium hover:shadow-lg transition-all"
           >
             Explorer la boutique
           </button>
@@ -61,13 +124,14 @@ export default function CartPage({ onNavigate }: CartPageProps) {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-20 bg-[#F3F4F6]">
+    <div className="min-h-screen pt-24 pb-20 bg-gray-100">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-[#111827] mb-8">
+        <h1 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-8">
           Votre Panier
         </h1>
 
         <div className="grid lg:grid-cols-3 gap-8">
+          {/* LISTE DES ARTICLES */}
           <div className="lg:col-span-2 space-y-4">
             {items.map((item) => (
               <div
@@ -75,20 +139,25 @@ export default function CartPage({ onNavigate }: CartPageProps) {
                 className="bg-white rounded-2xl p-6 shadow-md flex gap-6"
               >
                 <img
-                  src={item.image}
+                  src={getImageUrl(item.image)}
                   alt={item.name}
-                  className="w-24 h-24 object-cover rounded-xl"
+                  className="w-24 h-24 object-cover rounded-xl flex-shrink-0"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    target.onerror = null;
+                    target.src = getFallbackImage();
+                  }}
                 />
 
-                <div className="flex-1">
-                  <h3 className="font-serif text-xl font-bold text-[#111827] mb-2">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-serif text-xl font-bold text-gray-900 mb-2 truncate">
                     {item.name}
                   </h3>
-                  <p className="text-gray-600 text-sm mb-4">
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                     {item.description}
                   </p>
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between flex-wrap gap-3">
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
@@ -108,8 +177,8 @@ export default function CartPage({ onNavigate }: CartPageProps) {
                     </div>
 
                     <div className="flex items-center gap-4">
-                      <span className="text-2xl font-bold text-[#8B5CF6]">
-                        {(item.price * item.quantity).toFixed(2)}€
+                      <span className="text-2xl font-bold text-purple-600">
+                        {(item.price * item.quantity).toLocaleString('fr-FR')} FCFA
                       </span>
                       <button
                         onClick={() => removeItem(item.id)}
@@ -124,30 +193,31 @@ export default function CartPage({ onNavigate }: CartPageProps) {
             ))}
           </div>
 
+          {/* RÉCAPITULATIF */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl p-6 shadow-md sticky top-24">
-              <h2 className="font-serif text-2xl font-bold text-[#111827] mb-6">
+              <h2 className="font-serif text-2xl font-bold text-gray-900 mb-6">
                 Récapitulatif
               </h2>
 
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-gray-600">
                   <span>Sous-total</span>
-                  <span>{getTotalPrice().toFixed(2)}€</span>
+                  <span>{getTotalPrice().toLocaleString('fr-FR')} FCFA</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Livraison</span>
-                  <span>Gratuite</span>
+                  <span className="text-green-600 font-semibold">Gratuite</span>
                 </div>
-                <div className="border-t border-gray-200 pt-3 flex justify-between text-xl font-bold text-[#111827]">
+                <div className="border-t border-gray-200 pt-3 flex justify-between text-xl font-bold text-gray-900">
                   <span>Total</span>
-                  <span>{getTotalPrice().toFixed(2)}€</span>
+                  <span>{getTotalPrice().toLocaleString('fr-FR')} FCFA</span>
                 </div>
               </div>
 
               <button
                 onClick={() => setIsOrderFormOpen(true)}
-                className="w-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white py-2 rounded-full font-medium hover:shadow-lg transition-all"
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-4 rounded-full font-medium hover:shadow-lg transition-all"
               >
                 Finaliser la commande
               </button>
@@ -156,9 +226,10 @@ export default function CartPage({ onNavigate }: CartPageProps) {
         </div>
       </div>
 
+      {/* MODAL FORMULAIRE DE COMMANDE */}
       {isOrderFormOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div className="bg-white rounded-3xl p-8 max-w-2xl w-full my-8">
             {isSubmitted ? (
               <div className="text-center py-12">
                 <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -166,114 +237,118 @@ export default function CartPage({ onNavigate }: CartPageProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="font-serif text-3xl font-bold text-[#111827] mb-4">
-                  Commande envoyée !
+                <h3 className="font-serif text-3xl font-bold text-gray-900 mb-4">
+                  Commande confirmée !
                 </h3>
                 <p className="text-gray-600">
-                  Nous vous contacterons très bientôt pour confirmer votre commande.
+                  Nous vous contacterons très bientôt. Merci pour votre confiance !
                 </p>
               </div>
             ) : (
               <>
-                <h2 className="font-serif text-3xl font-bold text-[#111827] mb-6">
+                <h2 className="font-serif text-3xl font-bold text-gray-900 mb-6">
                   Finaliser votre commande
                 </h2>
 
-                <form onSubmit={handleSubmitOrder} className="space-y-4">
+                {error && (
+                  <div className="mb-4 p-4 bg-red-50 border-2 border-red-200 rounded-lg flex items-center gap-3">
+                    <AlertCircle className="text-red-600 flex-shrink-0" size={20} />
+                    <p className="text-red-800 text-sm flex-1">{error}</p>
+                    <button 
+                      onClick={() => setError(null)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
+                )}
+
+                <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Nom complet *
+                      Nom complet <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent outline-none"
+                      value={formData.client_name}
+                      onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none"
+                      placeholder="Jean Dupont"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email *
+                      Email <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
                       required
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent outline-none"
+                      value={formData.client_email}
+                      onChange={(e) => setFormData({ ...formData, client_email: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none"
+                      placeholder="jean.dupont@example.com"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Téléphone *
+                      Téléphone <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
                       required
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent outline-none"
+                      value={formData.client_phone}
+                      onChange={(e) => setFormData({ ...formData, client_phone: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none"
+                      placeholder="+225 07 XX XX XX XX"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Adresse de livraison *
-                    </label>
-                    <textarea
-                      required
-                      value={formData.address}
-                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      rows={3}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Message (optionnel)
-                    </label>
-                    <textarea
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      rows={3}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent outline-none"
-                    />
-                  </div>
-
-                  <div className="bg-[#F3F4F6] rounded-xl p-4">
-                    <h3 className="font-bold text-[#111827] mb-2">Votre commande</h3>
+                  <div className="bg-gray-50 rounded-xl p-4 mt-6">
+                    <h3 className="font-bold text-gray-900 mb-3">Votre commande</h3>
                     {items.map((item) => (
-                      <div key={item.id} className="flex justify-between text-sm text-gray-600 mb-1">
-                        <span>{item.name} x{item.quantity}</span>
-                        <span>{(item.price * item.quantity).toFixed(2)}€</span>
+                      <div key={item.id} className="flex justify-between text-sm text-gray-600 mb-2">
+                        <span className="flex-1 truncate mr-2">{item.name} x{item.quantity}</span>
+                        <span className="font-semibold whitespace-nowrap">
+                          {(item.price * item.quantity).toLocaleString('fr-FR')} FCFA
+                        </span>
                       </div>
                     ))}
-                    <div className="border-t border-gray-300 mt-2 pt-2 flex justify-between font-bold text-[#111827]">
+                    <div className="border-t border-gray-300 mt-3 pt-3 flex justify-between font-bold text-gray-900">
                       <span>Total</span>
-                      <span>{getTotalPrice().toFixed(2)}€</span>
+                      <span>{getTotalPrice().toLocaleString('fr-FR')} FCFA</span>
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 mt-6">
                     <button
-                      type="button"
-                      onClick={() => setIsOrderFormOpen(false)}
-                      className="flex-1 bg-gray-200 text-gray-800 py-3 rounded-full font-medium hover:bg-gray-300 transition-colors"
+                      onClick={() => {
+                        setIsOrderFormOpen(false);
+                        setError(null);
+                      }}
+                      disabled={isSubmitting}
+                      className="flex-1 bg-gray-200 text-gray-800 py-3 rounded-full font-medium hover:bg-gray-300 transition-colors disabled:opacity-50"
                     >
                       Annuler
                     </button>
                     <button
-                      type="submit"
-                      className="flex-1 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white py-3 rounded-full font-medium hover:shadow-lg transition-all"
+                      onClick={handleSubmitOrder}
+                      disabled={isSubmitting}
+                      className="flex-1 bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-full font-medium hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                     >
-                      Envoyer la commande
+                      {isSubmitting ? (
+                        <>
+                          <Loader className="animate-spin" size={20} />
+                          Envoi en cours...
+                        </>
+                      ) : (
+                        'Confirmer la commande'
+                      )}
                     </button>
                   </div>
-                </form>
+                </div>
               </>
             )}
           </div>
