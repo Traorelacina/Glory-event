@@ -176,7 +176,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     },
     {
       icon: 'https://img.icons8.com/?size=100&id=SsUyXplSFORf&format=png&color=000000',
-      title: 'Respect des Délais',
+      title: 'Délais Respectés',
       description: 'Livraison dans les temps avec une qualité constante'
     },
     {
