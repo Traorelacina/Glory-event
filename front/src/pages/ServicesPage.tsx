@@ -35,10 +35,10 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
 
   const services: Service[] = [
     {
-      id: "mariages",
-      title: "Mariages de Luxe",
+      id: "wedding-planner",
+      title: "Wedding Planner",
       description:
-        "Transformez le plus beau jour de votre vie en un moment magique et inoubliable. Notre équipe d'experts orchestre chaque détail avec passion et professionnalisme pour créer une célébration à votre image.",
+        "Transformez le plus beau jour de votre vie en un moment magique et inoubliable. Nos wedding planners orchestrent chaque détail avec passion et professionnalisme pour créer une célébration à votre image, de la conception à la réalisation.",
       image: "https://images.pexels.com/photos/265722/pexels-photo-265722.jpeg?auto=compress&cs=tinysrgb&w=1920",
       gallery: [
         "https://scontent.fabj5-2.fna.fbcdn.net/v/t39.30808-6/558455144_792108313615912_2798952595938159567_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEbj8oFgGOihZjy6ekWUxbGRAQhTiXs1TtEBCFOJezVO_XZbiEp0cqORgrCI-OE7UrLQAH4wazyFLT3wy3QC_lO&_nc_ohc=KbNKsWH1yWUQ7kNvwEzthiM&_nc_oc=AdmVGo1D7ea42Y_Pp31Y_f4ubQcSAJR2HH5l00MM0JQzkg2joV0tjfooRYUYIqfiodY&_nc_zt=23&_nc_ht=scontent.fabj5-2.fna&_nc_gid=F4hu4LqHkKWTZ2CDMdKL7Q&oh=00_AfgeHu5iErGY3ohtcjdfnNAprrYj1d5qAo2qdhY6wCXu5A&oe=69277DA8",
@@ -49,38 +49,25 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       icon: "https://cdn-icons-png.flaticon.com/512/747/747376.png",
     },
     {
-      id: "corporate",
-      title: "Événements Corporate",
+      id: "decoration",
+      title: "Décoration sur Mesure",
       description:
-        "Donnez à vos événements professionnels une dimension exceptionnelle. Séminaires, lancements de produits, galas d'entreprise : nous créons des expériences qui marquent les esprits et renforcent votre image de marque.",
-      image: "https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=1920",
+        "L'art de créer des ambiances qui racontent votre histoire. Notre équipe de décorateurs talentueux conçoit des univers visuels époustouflants, du concept initial jusqu'à la réalisation finale, pour tous types d'événements.",
+      image:
+        "https://scontent.fabj5-2.fna.fbcdn.net/v/t51.82787-15/561846531_17984930459906860_3449748711829899152_n.jpg?stp=dst-jpegr_tt6&_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeE-97ASt1R-tFyGboBYyqlhyjwfjU_pK1bKPB-NT-krVp5qtP4UMyKfIREn082A8ERfuTeW_dRomWFJnLgjZTbg&_nc_ohc=ROK8SXoyv38Q7kNvwFyQDBH&_nc_oc=AdlWggG2iid5xhJ82zFWXhcuxSfKLShSmbRKMW1a6WxZ4Nl_5NUKpX0-swCzx4KkPNY&_nc_zt=23&se=-1&_nc_ht=scontent.fabj5-2.fna&_nc_gid=IL9NZczTjXZ78SY9I-D4WA&oh=00_Afjlm7Bt_GSumAERoroCO9KPyWrHIOGBFThIiFy2kx_bVQ&oe=692773C0",
       gallery: [
-        "https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/2833037/pexels-photo-2833037.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/1181622/pexels-photo-1181622.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://scontent.fabj5-1.fna.fbcdn.net/v/t39.30808-6/565690055_802299149263495_5241726712948988641_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHqmn6Mg1k5KHHjQA3xnpryVCwmStiPL3lULCZK2I8veVW_UcozuXcd_j2_KJ_1_z_33kZc4KKGvI5t6CyYmHQX&_nc_ohc=dmYopNbPV0MQ7kNvwHt2Pai&_nc_oc=AdmEGr5BTojp671ASzZQUqvqOB45regpAP5vWGwHHFgxFGvDLw5t31shp72bIiF3hZ8&_nc_zt=23&_nc_ht=scontent.fabj5-1.fna&_nc_gid=-FQu5vq5kSGjfhsXBn0w0g&oh=00_AfiYmYBe75WP0TvYDyVPzVQI5AudFtqhNoxq-00r20U-rg&oe=69277332",
+        "https://scontent.fabj5-1.fna.fbcdn.net/v/t39.30808-6/473570381_586580980835314_5699410999367893011_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEjZmKOT3Upn1xVzeiBs4mjz6uQ9o2-FkDPq5D2jb4WQGa0IVuvL3nzZEUylTQC-aey7udEcgW_A3oy1Fjh5Ji4&_nc_ohc=vhTwHd2Gx88Q7kNvwG3_agQ&_nc_oc=AdkShAoSR1MPPHJ6EYUlC4YTUa3Vx7vK99pcl8aPV56Oq349vlM3yCF3wVcJATWOU5g&_nc_zt=23&_nc_ht=scontent.fabj5-1.fna&_nc_gid=VWVgF6SPGPnuBquHCcmX0w&oh=00_Afgig4tc1o3hWXcMFssaQve1kd6Ti1GVTdEO51dVQ5tKBg&oe=69276631",
+        "https://images.pexels.com/photos/2306281/pexels-photo-2306281.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://scontent.fabj5-2.fna.fbcdn.net/v/t51.82787-15/561846531_17984930459906860_3449748711829899152_n.jpg?stp=dst-jpegr_tt6&_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeE-97ASt1R-tFyGboBYyqlhyjwfjU_pK1bKPB-NT-krVp5qtP4UMyKfIREn082A8ERfuTeW_dRomWFJnLgjZTbg&_nc_ohc=ROK8SXoyv38Q7kNvwFyQDBH&_nc_oc=AdlWggG2iid5xhJ82zFWXhcuxSfKLShSmbRKMW1a6WxZ4Nl_5NUKpX0-swCzx4KkPNY&_nc_zt=23&se=-1&_nc_ht=scontent.fabj5-2.fna&_nc_gid=IL9NZczTjXZ78SY9I-D4WA&oh=00_Afjlm7Bt_GSumAERoroCO9KPyWrHIOGBFThIiFy2kx_bVQ&oe=692773C0",
       ],
-      icon: "https://cdn-icons-png.flaticon.com/512/1067/1067566.png",
-    },
-    {
-      id: "receptions",
-      title: "Réceptions Privées",
-      description:
-        "Anniversaires, fiançailles, baptêmes ou simplement l'envie de célébrer : nous créons des moments de partage authentiques dans des cadres enchanteurs. Chaque réception est unique, à votre image.",
-      image: "https://images.pexels.com/photos/1395967/pexels-photo-1395967.jpeg?auto=compress&cs=tinysrgb&w=1920",
-      gallery: [
-        "https://images.pexels.com/photos/1395967/pexels-photo-1395967.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/587741/pexels-photo-587741.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/1157557/pexels-photo-1157557.jpeg?auto=compress&cs=tinysrgb&w=800",
-      ],
-      icon: "https://cdn-icons-png.flaticon.com/512/3290/3290425.png",
+      icon: "https://cdn-icons-png.flaticon.com/512/3144/3144456.png",
     },
     {
       id: "restauration",
-      title: "Service de Restauration",
+      title: "Cuisine et Restauration",
       description:
-        "Une expérience culinaire raffinée pour sublimer vos événements. Notre chef et son équipe créent des menus sur mesure, alliant créativité et excellence gustative pour émerveiller vos convives.",
+        "Une expérience culinaire raffinée pour sublimer vos événements. Notre chef et son équipe créent des menus sur mesure, alliant créativité et excellence gustative pour émerveiller vos convives avec des saveurs inoubliables.",
       image: "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=1920",
       gallery: [
         "https://scontent.fabj5-1.fna.fbcdn.net/v/t39.30808-6/474460810_591402047019874_5302692506335260921_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHjUScCOWc-49kvUS4YFTugaz_HfWGNDFBrP8d9YY0MUBWTi9DzSUguUFL5RYCxP9j6VrRDncdeQbx-fZXPbzHq&_nc_ohc=ROHekJBwXAkQ7kNvwETIGAw&_nc_oc=AdmAoC5ngph4vQlYOX-PJddYZu1hxS4_5FrXZ5Y-GOFycj958n9ZU36FhWb1KLer7Fw&_nc_zt=23&_nc_ht=scontent.fabj5-1.fna&_nc_gid=qknFJdk8c_vTX6EXeDEDdg&oh=00_AfjicdhciVBfKrJL6oS5agAyvaY-99POGa-IH_FkOz3EZA&oe=69275D30",
@@ -91,19 +78,46 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       icon: "https://cdn-icons-png.flaticon.com/512/2738/2738730.png",
     },
     {
-      id: "decoration",
-      title: "Décoration sur Mesure",
+      id: "evenementiel",
+      title: "Événementiel",
       description:
-        "L'art de créer des ambiances qui racontent votre histoire. Notre équipe de décorateurs talentueux conçoit des univers visuels époustouflants, du concept initial jusqu'à la réalisation finale.",
-      image:
-        "https://scontent.fabj5-2.fna.fbcdn.net/v/t51.82787-15/561846531_17984930459906860_3449748711829899152_n.jpg?stp=dst-jpegr_tt6&_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeE-97ASt1R-tFyGboBYyqlhyjwfjU_pK1bKPB-NT-krVp5qtP4UMyKfIREn082A8ERfuTeW_dRomWFJnLgjZTbg&_nc_ohc=ROK8SXoyv38Q7kNvwFyQDBH&_nc_oc=AdlWggG2iid5xhJ82zFWXhcuxSfKLShSmbRKMW1a6WxZ4Nl_5NUKpX0-swCzx4KkPNY&_nc_zt=23&se=-1&_nc_ht=scontent.fabj5-2.fna&_nc_gid=IL9NZczTjXZ78SY9I-D4WA&oh=00_Afjlm7Bt_GSumAERoroCO9KPyWrHIOGBFThIiFy2kx_bVQ&oe=692773C0",
+        "Donnez vie à vos événements professionnels et privés avec notre expertise complète. Séminaires, lancements de produits, galas, conférences : nous créons des expériences qui marquent les esprits et renforcent votre message.",
+      image: "https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=1920",
       gallery: [
-        "https://scontent.fabj5-1.fna.fbcdn.net/v/t39.30808-6/565690055_802299149263495_5241726712948988641_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHqmn6Mg1k5KHHjQA3xnpryVCwmStiPL3lULCZK2I8veVW_UcozuXcd_j2_KJ_1_z_33kZc4KKGvI5t6CyYmHQX&_nc_ohc=dmYopNbPV0MQ7kNvwHt2Pai&_nc_oc=AdmEGr5BTojp671ASzZQUqvqOB45regpAP5vWGwHHFgxFGvDLw5t31shp72bIiF3hZ8&_nc_zt=23&_nc_ht=scontent.fabj5-1.fna&_nc_gid=-FQu5vq5kSGjfhsXBn0w0g&oh=00_AfiYmYBe75WP0TvYDyVPzVQI5AudFtqhNoxq-00r20U-rg&oe=69277332",
-        "https://scontent.fabj5-1.fna.fbcdn.net/v/t39.30808-6/473570381_586580980835314_5699410999367893011_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEjZmKOT3Upn1xVzeiBs4mjz6uQ9o2-FkDPq5D2jb4WQGa0IVuvL3nzZEUylTQC-aey7udEcgW_A3oy1Fjh5Ji4&_nc_ohc=vhTwHd2Gx88Q7kNvwG3_agQ&_nc_oc=AdkShAoSR1MPPHJ6EYUlC4YTUa3Vx7vK99pcl8aPV56Oq349vlM3yCF3wVcJATWOU5g&_nc_zt=23&_nc_ht=scontent.fabj5-1.fna&_nc_gid=VWVgF6SPGPnuBquHCcmX0w&oh=00_Afgig4tc1o3hWXcMFssaQve1kd6Ti1GVTdEO51dVQ5tKBg&oe=69276631",
-        "https://images.pexels.com/photos/2306281/pexels-photo-2306281.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://scontent.fabj5-2.fna.fbcdn.net/v/t51.82787-15/561846531_17984930459906860_3449748711829899152_n.jpg?stp=dst-jpegr_tt6&_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeE-97ASt1R-tFyGboBYyqlhyjwfjU_pK1bKPB-NT-krVp5qtP4UMyKfIREn082A8ERfuTeW_dRomWFJnLgjZTbg&_nc_ohc=ROK8SXoyv38Q7kNvwFyQDBH&_nc_oc=AdlWggG2iid5xhJ82zFWXhcuxSfKLShSmbRKMW1a6WxZ4Nl_5NUKpX0-swCzx4KkPNY&_nc_zt=23&se=-1&_nc_ht=scontent.fabj5-2.fna&_nc_gid=IL9NZczTjXZ78SY9I-D4WA&oh=00_Afjlm7Bt_GSumAERoroCO9KPyWrHIOGBFThIiFy2kx_bVQ&oe=692773C0",
+        "https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2833037/pexels-photo-2833037.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/1181622/pexels-photo-1181622.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=800",
       ],
-      icon: "https://cdn-icons-png.flaticon.com/512/3144/3144456.png",
+      icon: "https://cdn-icons-png.flaticon.com/512/1067/1067566.png",
+    },
+    {
+      id: "location-ustensiles",
+      title: "Location d'Ustensiles",
+      description:
+        "Un service complet de location d'ustensiles et d'équipements pour vos événements. De la vaisselle fine aux équipements de cuisine professionnels, nous vous proposons tout le nécessaire pour réussir votre réception.",
+      image: "https://images.pexels.com/photos/6267/menu-restaurant-vintage-table.jpg?auto=compress&cs=tinysrgb&w=1920",
+      gallery: [
+        "https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/1268558/pexels-photo-1268558.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/3992933/pexels-photo-3992933.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/6267/menu-restaurant-vintage-table.jpg?auto=compress&cs=tinysrgb&w=800",
+      ],
+      icon: "https://cdn-icons-png.flaticon.com/512/3502/3502601.png",
+    },
+    {
+      id: "location-mobilier",
+      title: "Location de Tables et Chaises",
+      description:
+        "Un large choix de mobilier élégant pour aménager vos espaces événementiels. Tables rondes, rectangulaires, chaises design ou classiques : nous adaptons le mobilier à votre thématique et au nombre de vos invités.",
+      image: "https://images.pexels.com/photos/169190/pexels-photo-169190.jpeg?auto=compress&cs=tinysrgb&w=1920",
+      gallery: [
+        "https://images.pexels.com/photos/169190/pexels-photo-169190.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2306281/pexels-photo-2306281.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/1395964/pexels-photo-1395964.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2306277/pexels-photo-2306277.jpeg?auto=compress&cs=tinysrgb&w=800",
+      ],
+      icon: "https://cdn-icons-png.flaticon.com/512/2917/2917242.png",
     },
   ]
 

@@ -23,21 +23,21 @@ export default function Footer({ onNavigate }: FooterProps) {
     { name: 'Accueil', path: 'home' },
     { name: 'Nos Services', path: 'services' },
     { name: 'Boutique', path: 'boutique' },
-    { name: 'Portfolio', path: 'portfolio' },
+    { name: 'Galerie ', path: 'portfolio' },
     { name: 'Contact', path: 'contact' },
   ];
 
   const services = [
-    'Weldind Planning',
-    'Décoration sur Mesure',
-    'Service de Restauration',
-    'Événements Corporate',
-    'Réceptions Privées',
+    'Wedding Planer',
+    'Décoration sur mesure',
+    'Cuisine et restauration',
+    'Evènementiel',
+    'Location d’ustensiles',
+    'Location de tables et chaises',
   ];
 
   const socialLinks = [
     { icon: Facebook, url: 'https://web.facebook.com/AffoueRose107', name: 'Facebook' },
-   
     { icon: TikTokIcon, url: 'https://www.tiktok.com/@kouakourose3?_r=1&_t=ZP-913v3HNoSB5', name: 'TikTok' },
   ];
 
@@ -49,11 +49,9 @@ export default function Footer({ onNavigate }: FooterProps) {
           {/* Company Info */}
           <div className="lg:col-span-1">
             <h3 className="font-serif text-2xl font-bold mb-4 bg-gradient-to-r from-[#ad5945] to-[#d38074] bg-clip-text text-transparent">
-              Événements Prestige
+              Glory Events by Rose
             </h3>
-            <p className="text-gray-300 mb-6 leading-relaxed">
-              Créateurs d&apos;expériences uniques et mémorables. Nous transformons vos rêves en réalité avec passion et excellence.
-            </p>
+            
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
                 <a
@@ -61,6 +59,8 @@ export default function Footer({ onNavigate }: FooterProps) {
                   href={social.url}
                   className="bg-gray-800 hover:bg-gradient-to-r hover:from-[#ad5945] hover:to-[#d38074] p-3 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group"
                   aria-label={social.name}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <social.icon className="w-5 h-5 group-hover:text-white transition-colors" />
                 </a>
@@ -110,31 +110,33 @@ export default function Footer({ onNavigate }: FooterProps) {
                   <MapPin className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-gray-300 group-hover:text-white transition-colors duration-200">
-                  123 Avenue Prestige<br />
-                  75008 Paris, France
+                  Amelia, Ohio (USA)<br />
+                  45102 (Code postal)
                 </span>
               </div>
-              <div className="flex items-center space-x-3 group">
+              <a 
+                href="tel:+15132073137"
+                className="flex items-center space-x-3 group hover:no-underline"
+              >
                 <div className="w-8 h-8 bg-gradient-to-r from-[#ad5945] to-[#d38074] rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <Phone className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-gray-300 group-hover:text-white transition-colors duration-200">+33 1 23 45 67 89</span>
-              </div>
-              <div className="flex items-center space-x-3 group">
+                <span className="text-gray-300 group-hover:text-white transition-colors duration-200">
+                  +1 513-207-3137
+                </span>
+              </a>
+              <a 
+                href="mailto:rosekouakou1093@hotmail.fr"
+                className="flex items-center space-x-3 group hover:no-underline"
+              >
                 <div className="w-8 h-8 bg-gradient-to-r from-[#ad5945] to-[#d38074] rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <Mail className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-gray-300 group-hover:text-white transition-colors duration-200">contact@evenements-prestige.fr</span>
-              </div>
+                <span className="text-gray-300 group-hover:text-white transition-colors duration-200">
+                  rosekouakou1093@hotmail.fr
+                </span>
+              </a>
             </div>
-
-            {/* Call to Action */}
-            <button
-              onClick={() => onNavigate?.('contact')}
-              className="mt-6 w-full bg-gradient-to-r from-[#ad5945] to-[#d38074] text-white py-3 rounded-xl font-medium hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-[#ad5945]/30"
-            >
-              Demander un devis
-            </button>
           </div>
         </div>
       </div>
@@ -144,19 +146,9 @@ export default function Footer({ onNavigate }: FooterProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-gray-400 text-sm">
-              © {currentYear} Événements Prestige. Tous droits réservés.
+              © {currentYear} Salem Technology. Tous droits réservés..
             </div>
-            <div className="flex space-x-6 text-sm text-gray-400">
-              <button className="hover:text-white transition-colors duration-200 hover:scale-105 transform">
-                Mentions légales
-              </button>
-              <button className="hover:text-white transition-colors duration-200 hover:scale-105 transform">
-                Politique de confidentialité
-              </button>
-              <button className="hover:text-white transition-colors duration-200 hover:scale-105 transform">
-                Conditions générales
-              </button>
-            </div>
+            
           </div>
         </div>
       </div>

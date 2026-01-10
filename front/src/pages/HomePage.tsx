@@ -6,6 +6,7 @@ import 'swiper/css';
 import Footer from '../components/Footer';
 import { statisticsService } from '../../services/statisticsService';
 import decorationImage from '../../images/event1.jpg';
+import slidetrois from '../../images/slide3.jpeg';
 
 interface HomePageProps {
   onNavigate: (page: string, section?: string) => void;
@@ -49,23 +50,16 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     {
       image: decorationImage,
       title: "Des décorations d'exception",
-      subtitle: "Vos cérémonies sont orchestrées avec élégance et raffinement.",
+      subtitle: "Vos cérémonies sont orchestrées avec élégance.",
       cta1: 'Obtenir un devis',
       cta2: 'Galerie photos'
     },
     {
-      image: 'https://images.pexels.com/photos/3184312/pexels-photo-3184312.jpeg?auto=compress&cs=tinysrgb&w=1920',
-      title: 'Événements Corporate',
-      subtitle: 'Solutions professionnelles pour vos séminaires et réceptions d\'entreprise. Excellence et innovation au rendez-vous.',
+      image: slidetrois,
+      title: 'Des parfums tendances ',
+      subtitle: 'Distinguez-vous en optant pour notre riche collection de parfums.',
       cta1: 'Organiser un événement',
       cta2: 'Voir le portfolio'
-    },
-    {
-      image: 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1920',
-      title: 'Réceptions Privées',
-      subtitle: 'Créez des moments mémorables pour vos célébrations personnelles. Anniversaires, baptêmes et fêtes sur mesure.',
-      cta1: 'Réserver maintenant',
-      cta2: 'Nos prestations'
     },
   ];
 
@@ -123,21 +117,21 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   const detailedServices = [
     {
       icon: 'https://img.icons8.com/?size=100&id=34F8IE9yR8fJ&format=png&color=000000',
-      title: 'Organisation de Mariage',
+      title: 'Wedding planer',
       description: 'Wedding planning complet pour votre jour parfait',
       color: 'from-[#ad5945] to-[#d38074]',
       slug: 'mariage'
     },
     {
       icon: 'https://img.icons8.com/?size=100&id=A8fp9eO99uvg&format=png&color=000000',
-      title: 'Décoration',
+      title: 'Décoration sur mesure',
       description: 'Design et mise en scène sur mesure',
       color: 'from-[#ad5945] to-[#ca715b]',
       slug: 'decoration'
     },
     {
       icon: 'https://cdn-icons-png.flaticon.com/512/2738/2738730.png',
-      title: 'Restauration',
+      title: 'Cuisine et restauration',
       description: 'Cuisine africaine, européenne et américaine',
       color: 'from-[#d38074] to-[#ad5945]',
       slug: 'restauration'
@@ -151,7 +145,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     },
     {
       icon: 'https://img.icons8.com/?size=100&id=103937&format=png&color=000000',
-      title: 'Réunion Professionnelle',
+      title: 'Location d’ustensiles',
       description: 'Séminaires et conférences de haut niveau',
       color: 'from-[#ca715b] to-[#d38074]',
       slug: 'reunion-professionnelle'
@@ -160,7 +154,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
    
     {
       icon: 'https://img.icons8.com/?size=100&id=108783&format=png&color=000000',
-      title: 'Réceptions Privées',
+      title: 'Location de tables et chaises',
       description: 'Anniversaires, baptêmes et célébrations familiales',
       color: 'from-[#d38074] to-[#ca715b]',
       slug: 'reception'
@@ -845,7 +839,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </span>
             </h2>
             <p className="font-inter text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed font-light">
-              De l'organisation de mariages de rêve aux événements corporate sophistiqués, nous maîtrisons tous les aspects de l'événementiel de luxe
+              Mariage, Anniversaire, Baby Shower, Baptême, Cérémonie 
+professionnelle, nous mettons à votre disposition notre expertise 
             </p>
           </div>
 
@@ -889,10 +884,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   {service.description}
                 </p>
 
-                <div className="flex items-center text-[#d38074] font-inter font-medium text-sm group-hover:text-[#ca715b] transition-colors tracking-wide group-hover:translate-x-2">
-                  <span className="mr-3">En savoir plus</span>
-                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-2 transition-transform" />
-                </div>
+          
 
                 <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
               </div>
@@ -1165,12 +1157,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <h2 className="font-cormorant text-5xl md:text-6xl font-light mb-8 tracking-tight text-glow" style={{ animation: 'slideDown 0.8s ease-out 0.1s both' }}>
             Découvrez notre
             <span className="block font-playfair italic text-5xl md:text-6xl text-white mt-2">
-              Collection de Parfums
+              collection
             </span>
           </h2>
-          <p className="font-inter text-xl mb-12 text-white/90 max-w-2xl mx-auto leading-relaxed font-light" style={{ animation: 'slideUp 0.8s ease-out 0.2s both' }}>
-            Des fragrances exclusives pour sublimer vos événements et créer une ambiance unique
-          </p>
+          
           
          
 

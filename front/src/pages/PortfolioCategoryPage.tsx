@@ -42,7 +42,7 @@ const categoryInfo: { [key: string]: {
   serviceDescription?: string;
 }} = {
   'mariage': {
-    title: 'Mariages de Luxe',
+    title: 'Mariages',
     description: 'Des cérémonies inoubliables orchestrées avec élégance et raffinement',
     icon: 'https://cdn-icons-png.flaticon.com/512/747/747376.png',
     gradient: 'from-[#ad5945] to-[#d38074]',
@@ -51,7 +51,7 @@ const categoryInfo: { [key: string]: {
     serviceDescription: 'Transformez le plus beau jour de votre vie en un moment magique et inoubliable. Notre équipe d\'experts orchestre chaque détail avec passion et professionnalisme pour créer une célébration à votre image.'
   },
   'corporate': {
-    title: 'Événements Corporate',
+    title: 'Événements',
     description: 'Solutions professionnelles pour vos séminaires et réceptions d\'entreprise',
     icon: 'https://cdn-icons-png.flaticon.com/512/1067/1067566.png',
     gradient: 'from-[#ca715b] to-[#ad5945]',
@@ -60,7 +60,7 @@ const categoryInfo: { [key: string]: {
     serviceDescription: 'Donnez à vos événements professionnels une dimension exceptionnelle. Séminaires, lancements de produits, galas d\'entreprise : nous créons des expériences qui marquent les esprits et renforcent votre image de marque.'
   },
   'reception': {
-    title: 'Réceptions Privées',
+    title: 'Location d’ustensiles',
     description: 'Créez des moments mémorables pour vos célébrations personnelles',
     icon: 'https://cdn-icons-png.flaticon.com/512/3290/3290425.png',
     gradient: 'from-[#d38074] to-[#ad5945]',

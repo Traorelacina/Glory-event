@@ -80,7 +80,7 @@ export default function ContactPage({ selectedService, onNavigate }: ContactPage
   };
 
   const services = [
-    'Mariages de Luxe',
+    'Mariages',
     'Événements Corporate',
     'Réceptions Privées',
     'Service de Restauration',
@@ -115,29 +115,35 @@ export default function ContactPage({ selectedService, onNavigate }: ContactPage
             <div>
               <div className="bg-gradient-to-br from-[#ad5945] to-[#d38074] rounded-3xl p-8 md:p-12 text-white mb-8 shadow-xl">
                 <h2 className="font-cormorant text-3xl font-bold mb-8">
-                  Informations de Contact
+                  Nos contacts
                 </h2>
 
                 <div className="space-y-6">
-                  <div className="flex items-start gap-4 group">
+                  <a 
+                    href="tel:+15132073137"
+                    className="flex items-start gap-4 group hover:no-underline"
+                  >
                     <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                       <Phone className="w-6 h-6" />
                     </div>
                     <div>
                       <h3 className="font-playfair font-bold mb-1">Téléphone</h3>
-                      <p className="font-inter text-white/90">+33 1 23 45 67 89</p>
+                      <p className="font-inter text-white/90">+1 513-207-3137</p>
                     </div>
-                  </div>
+                  </a>
 
-                  <div className="flex items-start gap-4 group">
+                  <a 
+                    href="mailto:rosekouakou1093@hotmail.fr"
+                    className="flex items-start gap-4 group hover:no-underline"
+                  >
                     <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                       <Mail className="w-6 h-6" />
                     </div>
                     <div>
                       <h3 className="font-playfair font-bold mb-1">Email</h3>
-                      <p className="font-inter text-white/90">contact@eventsprestige.fr</p>
+                      <p className="font-inter text-white/90">rosekouakou1093@hotmail.fr</p>
                     </div>
-                  </div>
+                  </a>
 
                   <div className="flex items-start gap-4 group">
                     <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -146,8 +152,8 @@ export default function ContactPage({ selectedService, onNavigate }: ContactPage
                     <div>
                       <h3 className="font-playfair font-bold mb-1">Adresse</h3>
                       <p className="font-inter text-white/90">
-                        123 Avenue des Champs-Élysées<br />
-                        75008 Paris, France
+                        Amelia, Ohio (USA)<br />
+                        45102 (Code postal)
                       </p>
                     </div>
                   </div>
@@ -253,7 +259,7 @@ export default function ContactPage({ selectedService, onNavigate }: ContactPage
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#ad5945] focus:border-transparent outline-none transition-all hover:border-gray-400 font-inter"
-                        placeholder="+33 1 23 45 67 89"
+                        placeholder="+1 513-207-3137"
                         disabled={isSubmitting}
                       />
                     </div>
