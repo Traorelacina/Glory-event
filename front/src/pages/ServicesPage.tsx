@@ -505,7 +505,7 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
           <div className="text-center mb-16 relative z-10">
             <div style={{ animation: 'slideDown 0.8s ease-out' }}>
               <span className="inline-block bg-gradient-to-r from-[#ad5945] to-[#d38074] text-white px-6 py-3 rounded-full font-raleway text-sm font-semibold uppercase tracking-widest mb-6 shimmer-effect glowing-badge">
-                Nos Services Premium
+                Nos Services
               </span>
             </div>
 
@@ -598,7 +598,7 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
                             <ChevronDown className={`chevron-rotate w-4 h-4 ${isExpanded ? "rotated" : ""}`} />
                           </button>
                           <button
-                            onClick={() => onNavigate("contact", service.id)}
+                            onClick={() => onNavigate("contact")}
                             className="button-hover magnetic-button font-raleway relative px-6 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-[#ad5945] to-[#d38074] hover:shadow-lg hover:shadow-[#ad5945]/50 transition-all duration-300 flex items-center gap-2 group text-sm transform hover:-translate-y-2 hover:scale-110 overflow-hidden"
                             onMouseEnter={(e) => {
                               const rect = e.currentTarget.getBoundingClientRect();
