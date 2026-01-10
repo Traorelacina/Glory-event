@@ -968,9 +968,10 @@ professionnelle, nous mettons à votre disposition notre expertise
       </section>
 
       {/* Section Portfolio avec effet de révélation */}
-      <section ref={portfolioSectionRef}
+            <section ref={portfolioSectionRef}
         className="py-24 bg-white"
         id="portfolio-section"
+        style={{ display: 'none' }}  // 👈 Cache la section
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div 
@@ -1108,7 +1109,7 @@ professionnelle, nous mettons à votre disposition notre expertise
 
       {/* Section Boutique avec animations dynamiques */}
       <section 
-        id="boutique-section"
+        id="boutique-section" 
         data-animate
         className="py-24 bg-gradient-to-br from-[#ad5945] via-[#d38074] to-[#ca715b] text-white text-center relative overflow-hidden"
         style={{
