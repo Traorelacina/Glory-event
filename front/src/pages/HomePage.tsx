@@ -165,22 +165,22 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   const features = [
     {
       icon: 'https://img.icons8.com/?size=100&id=NEUI7OgKJl6r&format=png&color=000000',
-      title: 'Service Personnalisé',
+      title: 'Service\nPersonnalisé',
       description: 'Chaque événement est unique et mérite une attention particulière'
     },
     {
       icon: 'https://img.icons8.com/?size=100&id=SsUyXplSFORf&format=png&color=000000',
-      title: 'Délais Respectés',
+      title: 'Délais\nRespectés',
       description: 'Livraison dans les temps avec une qualité constante'
     },
     {
       icon: 'https://img.icons8.com/?size=100&id=tt6pu1n8E0QU&format=png&color=000000',
-      title: 'Excellence Garantie',
+      title: 'Excellence\nGarantie',
       description: 'Des prestations de qualité réalisées dans le respect des délais'
     },
     {
       icon: 'https://img.icons8.com/?size=100&id=104233&format=png&color=000000',
-      title: 'Innovation Créative',
+      title: 'Innovation\nCréative',
       description: 'Des concepts novateurs qui marquent les esprits'
     },
   ];
@@ -742,9 +742,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                     style={{ animation: 'wiggle 3s ease-in-out infinite' }}
                   />
                 </div>
-                <h3 className="font-playfair text-2xl font-semibold text-gray-900 mb-4 tracking-tight group-hover:text-[#ad5945] transition-colors duration-300">
-                  {feature.title}
-                </h3>
+                <h3 className="font-playfair text-2xl font-semibold text-gray-900 mb-4 tracking-tight group-hover:text-[#ad5945] transition-colors duration-300 whitespace-pre-line">
+  {feature.title}
+</h3>
+                
                 <p className="font-inter text-gray-600 leading-relaxed font-light">
                   {feature.description}
                 </p>
@@ -776,9 +777,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                         className="w-10 h-10"
                       />
                     </div>
-                    <h3 className="font-playfair text-xl font-semibold text-gray-900 mb-3 tracking-tight">
-                      {feature.title}
-                    </h3>
+                    <h3 className="font-playfair text-xl font-semibold text-gray-900 mb-3 tracking-tight whitespace-pre-line">
+  {feature.title}
+</h3>
+                    
                     <p className="font-inter text-gray-600 leading-relaxed font-light text-sm">
                       {feature.description}
                     </p>
