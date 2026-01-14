@@ -112,10 +112,7 @@ function App() {
       <PageTracker />
       
       <Routes>
-        {/* Pages publiques avec layout */}
-        <Route path="/*" element={<MainLayout />} />
-
-        {/* Pages admin sans Header */}
+        {/* Pages admin sans Header - DOIT ÊTRE AVANT LA ROUTE GENERIQUE */}
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route
           path="/admin/dashboard"
@@ -149,7 +146,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/portfolios"
           element={
@@ -158,6 +154,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Pages publiques avec layout - DOIT ÊTRE APRÈS LES ROUTES ADMIN */}
+        <Route path="/*" element={<MainLayout />} />
 
         {/* Redirection par défaut */}
         <Route path="*" element={<Navigate to="/" replace />} />
