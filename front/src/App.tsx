@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { BrowserRouter, HashRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
@@ -14,7 +14,7 @@ import AdminCommandesPage from './pages/AdminCommandesPage';
 import AdminContactsPage from './pages/AdminContactsPage';
 import AdminPortfoliosPage from './pages/AdminPortfoliosPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import PortfolioCategoryPage from './pages/PortfolioCategoryPage'; // Ajout de l'import
+import PortfolioCategoryPage from './pages/PortfolioCategoryPage';
 import { statisticsService } from '../services/statisticsService';
 
 // Composant pour le tracking des pages
@@ -101,18 +101,55 @@ function MainLayout() {
           path="/portfolio/decoration" 
           element={<PortfolioCategoryPage category="decoration" onNavigate={handleNavigate} />} 
         />
+        
+        {/* Route pour accéder à l'admin via un lien visible */}
+        <Route path="/access-admin" element={<AccessAdminPage />} />
       </Routes>
     </>
   );
 }
 
-function App() {
+// Page d'accès à l'administration
+function AccessAdminPage() {
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    // Rediriger automatiquement vers la page admin
+    navigate('/admin/login');
+  }, [navigate]);
+  
   return (
-    <BrowserRouter>
-      <PageTracker />
-      
+    <div style={{ 
+      textAlign: 'center', 
+      padding: '100px 20px',
+      minHeight: '60vh'
+    }}>
+      <h2>Accès à l'Administration</h2>
+      <p>Redirection vers la page de connexion...</p>
+      <div style={{ marginTop: '30px' }}>
+        <button 
+          onClick={() => navigate('/admin/login')}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Cliquez ici si la redirection ne fonctionne pas
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Composant AdminSection avec HashRouter
+function AdminSection() {
+  return (
+    <HashRouter>
       <Routes>
-        {/* Pages admin sans Header - DOIT ÊTRE AVANT LA ROUTE GENERIQUE */}
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route
           path="/admin/dashboard"
@@ -154,9 +191,44 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Redirection pour l'admin */}
+        <Route path="*" element={<Navigate to="/admin/login" replace />} />
+      </Routes>
+    </HashRouter>
+  );
+}
 
-        {/* Pages publiques avec layout - DOIT ÊTRE APRÈS LES ROUTES ADMIN */}
+// Composant principal App
+function App() {
+  const [isHashRoute, setIsHashRoute] = useState(false);
+  
+  useEffect(() => {
+    // Vérifier si l'URL contient un hash pour admin
+    const path = window.location.pathname;
+    const hash = window.location.hash;
+    
+    // Si c'est une URL directe admin ou hash admin
+    if (path.includes('/admin/') || hash.includes('/admin/')) {
+      setIsHashRoute(true);
+    }
+  }, []);
+
+  // Si c'est une route admin, utiliser HashRouter
+  if (isHashRoute) {
+    return <AdminSection />;
+  }
+
+  // Sinon, utiliser BrowserRouter normal
+  return (
+    <BrowserRouter>
+      <PageTracker />
+      
+      <Routes>
+        {/* Pages publiques avec layout */}
         <Route path="/*" element={<MainLayout />} />
+
+        {/* Redirection pour les URLs admin directes */}
+        <Route path="/admin/*" element={<Navigate to="/access-admin" replace />} />
 
         {/* Redirection par défaut */}
         <Route path="*" element={<Navigate to="/" replace />} />
