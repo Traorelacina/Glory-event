@@ -973,7 +973,7 @@ professionnelle, nous mettons à votre disposition notre expertise
             <section ref={portfolioSectionRef}
         className="py-24 bg-white"
         id="portfolio-section"
-        style={{ display: 'none' }}  // 👈 Cache la section
+          // 👈 Cache la section
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div 
