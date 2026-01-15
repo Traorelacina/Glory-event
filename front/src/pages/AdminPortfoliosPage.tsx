@@ -164,33 +164,38 @@ export default function AdminPortfoliosPage() {
   };
 
   const openModal = (portfolio?: Portfolio) => {
-    if (portfolio) {
-      setEditingPortfolio(portfolio);
-      setFormData({
-        title: portfolio.title,
-        description: portfolio.description || '',
-        category: portfolio.category,
-        featured: portfolio.featured,
-        date: portfolio.date,
-        image: null,
-        additionalImages: [],
-        deletedImages: [],
-      });
-    } else {
-      setEditingPortfolio(null);
-      setFormData({
-        title: '',
-        description: '',
-        category: 'mariage',
-        featured: false,
-        date: new Date().toISOString().split('T')[0],
-        image: null,
-        additionalImages: [],
-        deletedImages: [],
-      });
-    }
-    setIsModalOpen(true);
-  };
+  if (portfolio) {
+    setEditingPortfolio(portfolio);
+    
+    // Formater la date au format YYYY-MM-DD
+    const portfolioDate = portfolio.date ? new Date(portfolio.date) : new Date();
+    const formattedDate = portfolioDate.toISOString().split('T')[0];
+    
+    setFormData({
+      title: portfolio.title,
+      description: portfolio.description || '',
+      category: portfolio.category,
+      featured: portfolio.featured,
+      date: formattedDate, // Utiliser la date formatée
+      image: null,
+      additionalImages: [],
+      deletedImages: [],
+    });
+  } else {
+    setEditingPortfolio(null);
+    setFormData({
+      title: '',
+      description: '',
+      category: 'mariage',
+      featured: false,
+      date: new Date().toISOString().split('T')[0],
+      image: null,
+      additionalImages: [],
+      deletedImages: [],
+    });
+  }
+  setIsModalOpen(true);
+};
 
   const closeModal = () => {
     setIsModalOpen(false);
