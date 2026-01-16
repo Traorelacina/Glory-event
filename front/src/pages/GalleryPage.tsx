@@ -124,12 +124,11 @@ export default function GalleryPage({ onNavigate }: GalleryPageProps) {
   };
 
   const getGalleryImages = (portfolio: Portfolio) => {
-    const allImages = [
-      portfolio.image,
-      ...(portfolio.images?.map(img => `https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/${img.image_path}`) || [])
-    ];
-    return allImages.filter(Boolean);
-  };
+  const allImages = [
+    ...(portfolio.images?.map(img => `https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/${img.image_path}`) || [])
+  ];
+  return allImages.filter(Boolean);
+};
 
   return (
     <div className="min-h-screen font-playfair text-[#111827] overflow-x-hidden">
