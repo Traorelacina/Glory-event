@@ -32,7 +32,7 @@ export default function Footer({ onNavigate }: FooterProps) {
     'Décoration sur mesure',
     'Cuisine et restauration',
     'Evènementiel',
-    'Location d’ustensiles',
+    "Location d'ustensiles",
     'Location de tables et chaises',
   ];
 
@@ -43,12 +43,41 @@ export default function Footer({ onNavigate }: FooterProps) {
 
   return (
     <footer className="bg-[#111827] text-white">
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+        
+        .font-playfair {
+          font-family: 'Playfair Display', serif;
+          letter-spacing: -0.5px;
+        }
+
+        .font-dm-serif {
+          font-family: 'DM Serif Display', serif;
+          letter-spacing: -0.3px;
+        }
+
+        .font-raleway {
+          font-family: 'Raleway', sans-serif;
+          letter-spacing: 0.3px;
+        }
+
+        .font-lora {
+          font-family: 'Lora', serif;
+          letter-spacing: 0.2px;
+        }
+
+        .font-inter {
+          font-family: 'Raleway', sans-serif;
+          letter-spacing: 0.3px;
+        }
+      `}</style>
+
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-1">
-            <h3 className="font-serif text-2xl font-bold mb-4 bg-gradient-to-r from-[#ad5945] to-[#d38074] bg-clip-text text-transparent">
+            <h3 className="font-playfair text-2xl font-bold mb-4 bg-gradient-to-r from-[#ad5945] to-[#d38074] bg-clip-text text-transparent">
               Glory Events by Rose
             </h3>
             
@@ -70,13 +99,13 @@ export default function Footer({ onNavigate }: FooterProps) {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-serif text-lg font-semibold mb-6 text-white">Navigation</h4>
+            <h4 className="font-dm-serif text-lg font-semibold mb-6 text-white">Navigation</h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <button
                     onClick={() => onNavigate?.(link.path)}
-                    className="text-gray-300 hover:text-white transition-all duration-200 hover:translate-x-2 transform flex items-center group w-full text-left"
+                    className="font-inter text-gray-300 hover:text-white transition-all duration-200 hover:translate-x-2 transform flex items-center group w-full text-left"
                   >
                     <span className="w-2 h-2 bg-gradient-to-r from-[#ad5945] to-[#d38074] rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                     {link.name}
@@ -88,11 +117,11 @@ export default function Footer({ onNavigate }: FooterProps) {
 
           {/* Services */}
           <div>
-            <h4 className="font-serif text-lg font-semibold mb-6 text-white">Nos Services</h4>
+            <h4 className="font-dm-serif text-lg font-semibold mb-6 text-white">Nos Services</h4>
             <ul className="space-y-3">
               {services.map((service) => (
                 <li key={service} className="group">
-                  <span className="text-gray-300 hover:text-white transition-all duration-200 cursor-default flex items-center">
+                  <span className="font-inter text-gray-300 hover:text-white transition-all duration-200 cursor-default flex items-center">
                     <span className="w-1 h-1 bg-gradient-to-r from-[#ad5945] to-[#d38074] rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                     {service}
                   </span>
@@ -103,13 +132,13 @@ export default function Footer({ onNavigate }: FooterProps) {
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-serif text-lg font-semibold mb-6 text-white">Contact</h4>
+            <h4 className="font-dm-serif text-lg font-semibold mb-6 text-white">Contact</h4>
             <div className="space-y-4">
               <div className="flex items-start space-x-3 group">
                 <div className="w-8 h-8 bg-gradient-to-r from-[#ad5945] to-[#d38074] rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <MapPin className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-gray-300 group-hover:text-white transition-colors duration-200">
+                <span className="font-inter text-gray-300 group-hover:text-white transition-colors duration-200">
                   Amelia, Ohio (USA)<br />
                   45102 (Code postal)
                 </span>
@@ -121,7 +150,7 @@ export default function Footer({ onNavigate }: FooterProps) {
                 <div className="w-8 h-8 bg-gradient-to-r from-[#ad5945] to-[#d38074] rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <Phone className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-gray-300 group-hover:text-white transition-colors duration-200">
+                <span className="font-inter text-gray-300 group-hover:text-white transition-colors duration-200">
                   +1 513-207-3137
                 </span>
               </a>
@@ -132,7 +161,7 @@ export default function Footer({ onNavigate }: FooterProps) {
                 <div className="w-8 h-8 bg-gradient-to-r from-[#ad5945] to-[#d38074] rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <Mail className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-gray-300 group-hover:text-white transition-colors duration-200">
+                <span className="font-inter text-gray-300 group-hover:text-white transition-colors duration-200">
                   rosekouakou1093@hotmail.fr
                 </span>
               </a>
@@ -145,7 +174,7 @@ export default function Footer({ onNavigate }: FooterProps) {
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-gray-400 text-sm">
+            <div className="font-inter text-gray-400 text-sm">
               © {currentYear} Salem Technology. Tous droits réservés..
             </div>
             
