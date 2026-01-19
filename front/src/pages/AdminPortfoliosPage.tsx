@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Star, Calendar, Image as ImageIcon, X, Check } from 'lucide-react';
+import { Plus, Edit, Trash2, Star, Calendar, Image as ImageIcon, X, Loader2, CheckCircle } from 'lucide-react';
+import AdminNavbar from '../components/AdminNavbar';
+import { useAuthStore } from '../../store/AuthStore';
 
 interface PortfolioImage {
   id: number;
@@ -26,28 +28,16 @@ const categoryLabels: { [key: string]: string } = {
   evenement_professionnel: 'Événement Professionnel',
 };
 
-// Simuler le store d'authentification
-const useAuthStore = () => ({ token: 'demo-token' });
-
-// Composant AdminNavbar simulé
-const AdminNavbar = () => (
-  <div className="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-40">
-    <div className="max-w-7xl mx-auto px-4 py-4">
-      <h1 className="text-xl font-bold text-purple-600">Admin Dashboard</h1>
-    </div>
-  </div>
-);
-
 export default function AdminPortfoliosPage() {
   const { token } = useAuthStore();
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [editingPortfolio, setEditingPortfolio] = useState<Portfolio | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
   
   const [formData, setFormData] = useState({
     title: '',
@@ -96,13 +86,13 @@ export default function AdminPortfoliosPage() {
     setNotification({ type, message });
   };
 
-  const showSuccessConfirmation = (message: string) => {
+  const showSuccessModal = (message: string) => {
     setSuccessMessage(message);
-    setShowSuccessModal(true);
+    setIsSuccessModalOpen(true);
   };
 
-  const handleSuccessModalClose = () => {
-    setShowSuccessModal(false);
+  const closeSuccessModal = () => {
+    setIsSuccessModalOpen(false);
     setSuccessMessage('');
   };
 
@@ -143,12 +133,15 @@ export default function AdminPortfoliosPage() {
         });
       }
 
+      // 🔥 MÉTHODE QUI FONCTIONNE (comme AdminProduitsPage)
       const url = editingPortfolio 
         ? `https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/api/admin/portfolio/${editingPortfolio.id}`
         : 'https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/api/admin/portfolio';
 
+      // Toujours utiliser POST
       const method = 'POST';
 
+      // Pour la mise à jour, ajouter _method
       if (editingPortfolio) {
         data.append('_method', 'PUT');
       }
@@ -185,23 +178,23 @@ export default function AdminPortfoliosPage() {
         throw new Error(responseData.message || `Erreur ${response.status}`);
       }
 
-      // Mise à jour de la liste des portfolios
+      // Fermer d'abord le modal de formulaire
+      closeModal();
+      
+      // Afficher le modal de succès avec un léger délai
+      setTimeout(() => {
+        showSuccessModal(
+          editingPortfolio 
+            ? `Le portfolio "${formData.title}" a été mis à jour avec succès !`
+            : `Le portfolio "${formData.title}" a été créé avec succès !`
+        );
+      }, 300);
+      
       if (editingPortfolio) {
         setPortfolios(prev => prev.map(p => p.id === editingPortfolio.id ? responseData.data : p));
       } else {
         setPortfolios(prev => [responseData.data, ...prev]);
       }
-      
-      // Fermer le modal de formulaire
-      closeModal();
-      
-      // Afficher le modal de confirmation de succès
-      const message = editingPortfolio 
-        ? `Le portfolio "${formData.title}" a été mis à jour avec succès !` 
-        : `Le portfolio "${formData.title}" a été créé avec succès !`;
-      
-      showSuccessConfirmation(message);
-      
     } catch (error: any) {
       console.error('Erreur complète:', error);
       showNotification('error', error.message || 'Erreur lors de la sauvegarde du portfolio');
@@ -211,8 +204,12 @@ export default function AdminPortfoliosPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce portfolio ?')) return;
+    const portfolioTitle = portfolios.find(p => p.id === id)?.title || '';
+    
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer le portfolio "${portfolioTitle}" ?`)) return;
     if (!token) return;
+
+    setLoading(true);
 
     try {
       const response = await fetch(`https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/api/admin/portfolio/${id}`, {
@@ -232,13 +229,13 @@ export default function AdminPortfoliosPage() {
         throw new Error(data.message || `Erreur ${response.status}`);
       }
 
-      const deletedPortfolio = portfolios.find(p => p.id === id);
       setPortfolios(portfolios.filter((p) => p.id !== id));
-      
-      showSuccessConfirmation(`Le portfolio "${deletedPortfolio?.title}" a été supprimé avec succès !`);
+      showSuccessModal(`Le portfolio "${portfolioTitle}" a été supprimé avec succès !`);
     } catch (error: any) {
       console.error('Erreur lors de la suppression:', error);
       showNotification('error', error.message || 'Erreur lors de la suppression du portfolio');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -318,7 +315,7 @@ export default function AdminPortfoliosPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50">
       <AdminNavbar />
       
-      {/* Notification Toast */}
+      {/* Notification */}
       {notification && (
         <div className={`fixed top-24 right-4 z-50 ${notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white px-6 py-3 rounded-lg shadow-lg animate-slide-in`}>
           <div className="flex items-center justify-between">
@@ -331,27 +328,33 @@ export default function AdminPortfoliosPage() {
       )}
 
       {/* Modal de Confirmation de Succès */}
-      {showSuccessModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl animate-scale-in">
+      {isSuccessModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade-in">
+          {/* Fond avec flou */}
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={closeSuccessModal}
+          />
+          
+          {/* Modal */}
+          <div className="relative bg-white rounded-2xl max-w-md w-full shadow-2xl animate-scale-in">
             <div className="p-8 text-center">
               {/* Icône de succès animée */}
-              <div className="mx-auto mb-6 w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center animate-bounce-in">
-                <Check className="w-12 h-12 text-white stroke-[3]" />
+              <div className="w-20 h-20 mx-auto mb-6 animate-bounce-in">
+                <CheckCircle className="w-full h-full text-green-500 animate-pulse" />
               </div>
               
-              {/* Message de succès */}
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
                 Succès !
               </h3>
-              <p className="text-gray-600 mb-8 text-lg">
+              
+              <p className="text-gray-600 mb-8">
                 {successMessage}
               </p>
               
-              {/* Bouton OK */}
               <button
-                onClick={handleSuccessModalClose}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-semibold text-lg"
+                onClick={closeSuccessModal}
+                className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 font-semibold"
               >
                 OK, j'ai compris
               </button>
@@ -371,6 +374,7 @@ export default function AdminPortfoliosPage() {
             opacity: 1;
           }
         }
+        
         @keyframes fade-in {
           from {
             opacity: 0;
@@ -379,6 +383,7 @@ export default function AdminPortfoliosPage() {
             opacity: 1;
           }
         }
+        
         @keyframes scale-in {
           from {
             transform: scale(0.9);
@@ -389,28 +394,38 @@ export default function AdminPortfoliosPage() {
             opacity: 1;
           }
         }
+        
         @keyframes bounce-in {
           0% {
-            transform: scale(0);
+            transform: scale(0.3);
+            opacity: 0;
           }
           50% {
             transform: scale(1.1);
           }
+          70% {
+            transform: scale(0.9);
+          }
           100% {
             transform: scale(1);
+            opacity: 1;
           }
         }
+        
         .animate-slide-in {
           animation: slide-in 0.3s ease-out;
         }
+        
         .animate-fade-in {
-          animation: fade-in 0.3s ease-out;
+          animation: fade-in 0.2s ease-out;
         }
+        
         .animate-scale-in {
           animation: scale-in 0.3s ease-out;
         }
+        
         .animate-bounce-in {
-          animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          animation: bounce-in 0.6s ease-out;
         }
       `}</style>
       
@@ -529,9 +544,14 @@ export default function AdminPortfoliosPage() {
                   
                   <button
                     onClick={() => handleDelete(portfolio.id)}
-                    className="flex items-center justify-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition-colors font-medium"
+                    disabled={loading}
+                    className="flex items-center justify-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition-colors font-medium disabled:opacity-50"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    {loading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -555,10 +575,10 @@ export default function AdminPortfoliosPage() {
         )}
       </div>
 
-      {/* Modal de formulaire */}
+      {/* Modal de Formulaire */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
             <div className="sticky top-0 bg-white border-b px-6 py-4">
               <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 {editingPortfolio ? 'Modifier le portfolio' : 'Nouveau portfolio'}
@@ -575,7 +595,7 @@ export default function AdminPortfoliosPage() {
                   required
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                   placeholder="Ex: Mariage Sophie & Thomas"
                 />
               </div>
@@ -589,7 +609,7 @@ export default function AdminPortfoliosPage() {
                   rows={4}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none transition-all duration-200"
                   placeholder="Décrivez le projet..."
                 />
               </div>
@@ -603,7 +623,7 @@ export default function AdminPortfoliosPage() {
                     required
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                   >
                     {Object.entries(categoryLabels).map(([key, label]) => (
                       <option key={key} value={key}>{label}</option>
@@ -620,7 +640,7 @@ export default function AdminPortfoliosPage() {
                     required
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                   />
                 </div>
               </div>
@@ -637,10 +657,10 @@ export default function AdminPortfoliosPage() {
                     ...formData, 
                     image: e.target.files?.[0] || null 
                   })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                 />
                 {editingPortfolio && editingPortfolio.image && !formData.deletedImages.includes(-1) && (
-                  <div className="mt-2">
+                  <div className="mt-2 animate-fade-in">
                     <p className="text-sm text-gray-500 mb-2">Image actuelle :</p>
                     <div className="flex items-center gap-2">
                       <img 
@@ -651,7 +671,7 @@ export default function AdminPortfoliosPage() {
                       <button
                         type="button"
                         onClick={() => removeExistingImage(-1)}
-                        className="p-1 bg-red-100 text-red-600 rounded-full hover:bg-red-200"
+                        className="p-1 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -669,11 +689,11 @@ export default function AdminPortfoliosPage() {
                   accept="image/*"
                   multiple
                   onChange={handleAdditionalImagesChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                 />
                 
                 {formData.additionalImages.length > 0 && (
-                  <div className="mt-4">
+                  <div className="mt-4 animate-fade-in">
                     <p className="text-sm text-gray-500 mb-2">Nouvelles images :</p>
                     <div className="flex flex-wrap gap-2">
                       {formData.additionalImages.map((file, index) => (
@@ -686,7 +706,7 @@ export default function AdminPortfoliosPage() {
                           <button
                             type="button"
                             onClick={() => removeAdditionalImage(index)}
-                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -697,7 +717,7 @@ export default function AdminPortfoliosPage() {
                 )}
 
                 {editingPortfolio && editingPortfolio.images && editingPortfolio.images.length > 0 && (
-                  <div className="mt-4">
+                  <div className="mt-4 animate-fade-in">
                     <p className="text-sm text-gray-500 mb-2">Images existantes :</p>
                     <div className="flex flex-wrap gap-2">
                       {editingPortfolio.images
@@ -712,7 +732,7 @@ export default function AdminPortfoliosPage() {
                             <button
                               type="button"
                               onClick={() => removeExistingImage(image.id)}
-                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
                             >
                               <X className="w-3 h-3" />
                             </button>
@@ -729,7 +749,7 @@ export default function AdminPortfoliosPage() {
                   id="featured"
                   checked={formData.featured}
                   onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                  className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
+                  className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500 transition-colors"
                 />
                 <label htmlFor="featured" className="text-sm font-medium text-gray-700 flex items-center gap-2">
                   <Star className="w-4 h-4 text-yellow-500" />
@@ -749,18 +769,17 @@ export default function AdminPortfoliosPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
                       Enregistrement en cours...
-                    </span>
+                    </>
+                  ) : editingPortfolio ? (
+                    'Mettre à jour'
                   ) : (
-                    editingPortfolio ? 'Mettre à jour' : 'Créer le portfolio'
+                    'Créer'
                   )}
                 </button>
               </div>
