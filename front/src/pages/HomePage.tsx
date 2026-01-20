@@ -1,8 +1,9 @@
 import { ArrowRight } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
+import { Autoplay, Navigation } from 'swiper/modules';
 import 'swiper/css';
+import 'swiper/css/navigation';
 import Footer from '../components/Footer';
 import { statisticsService } from '../../services/statisticsService';
 import decorationImage from '../../images/event1.jpg';
@@ -10,6 +11,19 @@ import slidetrois from '../../images/slide3.jpeg';
 
 interface HomePageProps {
   onNavigate: (page: string, section?: string) => void;
+}
+
+// Interface pour les portfolios
+interface Portfolio {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  featured: boolean;
+  date: string;
+  created_at: string;
+  images: any[];
 }
 
 export default function HomePage({ onNavigate }: HomePageProps) {
@@ -25,38 +39,39 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   const [isHovering, setIsHovering] = useState<string | null>(null);
   const [scrollToSection, setScrollToSection] = useState<string | null>(null);
   const portfolioSectionRef = useRef<HTMLDivElement>(null);
-
-  // État pour les portfolios réels
-  const [portfolios, setPortfolios] = useState<any[]>([]);
+  
+  // Nouvel état pour les portfolios
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [loadingPortfolios, setLoadingPortfolios] = useState(true);
 
-  // Charger les portfolios depuis l'API
-  useEffect(() => {
-    const fetchPortfolios = async () => {
-      try {
-        const response = await fetch('https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/api/portfolio', {
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
+  // Fonction pour récupérer les portfolios
+  const fetchPortfolios = async () => {
+    try {
+      setLoadingPortfolios(true);
+      const response = await fetch('https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/api/portfolio', {
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
 
-        if (!response.ok) {
-          throw new Error(`Erreur ${response.status}`);
-        }
-
-        const data = await response.json();
-        // Trier par date de création décroissante (les plus récents en premier)
-        const sortedPortfolios = (data.data || []).sort((a: any, b: any) => 
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-        setPortfolios(sortedPortfolios);
-      } catch (error) {
-        console.error('Erreur lors du chargement des portfolios:', error);
-      } finally {
-        setLoadingPortfolios(false);
+      if (!response.ok) {
+        throw new Error(`Erreur ${response.status}`);
       }
-    };
 
+      const data = await response.json();
+      // Tri par date de création (du plus récent au plus ancien)
+      const sortedPortfolios = (data.data || []).sort((a: Portfolio, b: Portfolio) => 
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+      setPortfolios(sortedPortfolios);
+    } catch (error) {
+      console.error('Erreur lors du chargement des portfolios:', error);
+    } finally {
+      setLoadingPortfolios(false);
+    }
+  };
+
+  useEffect(() => {
     fetchPortfolios();
   }, []);
 
@@ -111,6 +126,42 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     return () => clearInterval(interval);
   }, []);
 
+  // Services principaux avec leurs catégories
+  const services = [
+    {
+      icon: 'https://cdn-icons-png.flaticon.com/512/747/747376.png',
+      title: 'Wedding Planning',
+      description: 'Des cérémonies inoubliables orchestrées avec élégance et raffinement',
+      color: 'from-[#ad5945] to-[#d38074]',
+      img: 'https://images.pexels.com/photos/1488467/pexels-photo-1488467.jpeg?auto=compress&cs=tinysrgb&w=600',
+      category: 'mariage'
+    },
+    {
+      icon: 'https://cdn-icons-png.flaticon.com/512/1067/1067566.png',
+      title: 'Événements Corporate',
+      description: "Solutions professionnelles pour vos séminaires et réceptions d'entreprise",
+      color: 'from-[#ca715b] to-[#ad5945]',
+      img: 'https://images.pexels.com/photos/3184312/pexels-photo-3184312.jpeg?auto=compress&cs=tinysrgb&w=600',
+      category: 'corporate'
+    },
+    {
+      icon: 'https://cdn-icons-png.flaticon.com/512/3290/3290425.png',
+      title: 'Réceptions Privées',
+      description: 'Créez des moments mémorables pour vos célébrations personnelles',
+      color: 'from-[#d38074] to-[#ad5945]',
+      img: 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=600',
+      category: 'reception'
+    },
+    {
+      icon: 'https://cdn-icons-png.flaticon.com/512/3144/3144456.png',
+      title: 'Décoration sur Mesure',
+      description: 'Ambiances uniques adaptées à votre vision et votre style',
+      color: 'from-[#ad5945] to-[#ca715b]',
+      img: 'https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=600',
+      category: 'decoration'
+    },
+  ];
+
   // Services détaillés
   const detailedServices = [
     {
@@ -143,7 +194,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     },
     {
       icon: 'https://img.icons8.com/color/96/000000/tableware.png',
-      title: 'Location d'ustensiles',
+      title: 'Location d\'ustensiles',
       description: 'Séminaires et conférences de haut niveau',
       color: 'from-[#ca715b] to-[#d38074]',
       slug: 'reunion-professionnelle'
@@ -182,6 +233,16 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       description: 'Des concepts novateurs qui marquent les esprits'
     },
   ];
+
+  // Raccourcis de catégories pour l'affichage
+  const categoryLabels: { [key: string]: string } = {
+    mariage: 'Mariage',
+    corporate: 'Corporate',
+    anniversaire: 'Anniversaire',
+    evenement_professionnel: 'Événement Professionnel',
+    reception: 'Réception',
+    decoration: 'Décoration'
+  };
 
   // Fonction pour gérer la navigation
   const handleNavigation = (page: string, section?: string) => {
@@ -965,11 +1026,8 @@ professionnelle, nous mettons à votre disposition notre expertise
         </div>
       </section>
 
-      {/* Section Portfolio avec effet de révélation */}
-      <section ref={portfolioSectionRef}
-        className="py-24 bg-white"
-        id="portfolio-section"
-      >
+      {/* Section Portfolio avec les portfolios réels */}
+      <section ref={portfolioSectionRef} className="py-24 bg-white" id="portfolio-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div 
             id="portfolio-header"
@@ -988,100 +1046,166 @@ professionnelle, nous mettons à votre disposition notre expertise
               </span>
             </h2>
             <p className="font-inter text-xl text-gray-600 max-w-2xl mx-auto font-light">
-              Découvrez nos derniers projets et laissez-vous inspirer par nos créations
+              Découvrez nos réalisations les plus récentes, orchestrées avec élégance et expertise
             </p>
           </div>
 
           {loadingPortfolios ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ad5945]"></div>
+            // Loading state
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ad5945] mb-4"></div>
+              <p className="font-inter text-gray-600">Chargement des réalisations...</p>
             </div>
           ) : portfolios.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-gray-500 text-lg">Aucun portfolio disponible pour le moment</p>
+            // Empty state
+            <div className="text-center py-12">
+              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="font-playfair text-2xl text-gray-700 mb-2">Aucune réalisation pour le moment</h3>
+              <p className="font-inter text-gray-500">Nos réalisations seront bientôt disponibles.</p>
             </div>
           ) : (
             <>
-              {/* Desktop Grid - 3 colonnes */}
-              <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {portfolios.slice(0, 6).map((portfolio, index) => (
-                  <div
-                    key={portfolio.id}
-                    id={`portfolio-${index}`}
-                    data-animate
-                    className="group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer transform hover:-translate-y-3 hover:shadow-2xl transition-all duration-500"
-                    onClick={() => onNavigate('portfolio')}
-                    onMouseEnter={() => setIsHovering(`portfolio-${index}`)}
-                    onMouseLeave={() => setIsHovering(null)}
-                    style={{
-                      opacity: isVisible[`portfolio-${index}`] ? 1 : 0,
-                      transform: isVisible[`portfolio-${index}`] ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.95)',
-                      transition: `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.15}s`,
-                    }}
-                  > 
-                    <div className="relative overflow-hidden">
-                      <img
-                        src={`https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/${portfolio.image}`}
-                        alt={portfolio.title}
-                        className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
+              {/* Desktop Carousel */}
+              <div className="hidden md:block relative">
+                <Swiper
+                  modules={[Navigation, Autoplay]}
+                  spaceBetween={30}
+                  slidesPerView={3}
+                  navigation={{
+                    nextEl: '.portfolio-next',
+                    prevEl: '.portfolio-prev',
+                  }}
+                  autoplay={{
+                    delay: 4000,
+                    disableOnInteraction: false,
+                  }}
+                  loop={true}
+                  breakpoints={{
+                    640: {
+                      slidesPerView: 1,
+                    },
+                    768: {
+                      slidesPerView: 2,
+                    },
+                    1024: {
+                      slidesPerView: 3,
+                    },
+                  }}
+                  className="pb-12"
+                >
+                  {portfolios.map((portfolio, index) => (
+                    <SwiperSlide key={portfolio.id}>
+                      <div
+                        id={`portfolio-${index}`}
+                        data-animate
+                        className="group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer transform hover:-translate-y-3 hover:shadow-2xl transition-all duration-500"
+                        onClick={() => onNavigate('portfolio', portfolio.category)}
+                        onMouseEnter={() => setIsHovering(`portfolio-${index}`)}
+                        onMouseLeave={() => setIsHovering(null)}
                         style={{
-                          filter: isHovering === `portfolio-${index}` ? 'brightness(1.1)' : 'brightness(1)'
+                          opacity: isVisible[`portfolio-${index}`] ? 1 : 0,
+                          transform: isVisible[`portfolio-${index}`] ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.95)',
+                          transition: `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.15}s`,
                         }}
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://images.pexels.com/photos/169198/pexels-photo-169198.jpeg?auto=compress&cs=tinysrgb&w=600';
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                      
-                      {portfolio.featured && (
-                        <div className="absolute top-3 right-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
-                          <span className="text-white">★</span>
-                          À la une
+                      > 
+                        <div className="relative overflow-hidden h-64">
+                          <img
+                            src={`https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/${portfolio.image}`}
+                            alt={portfolio.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            style={{
+                              filter: isHovering === `portfolio-${index}` ? 'brightness(1.1)' : 'brightness(1)'
+                            }}
+                            onError={(e) => {
+                              e.currentTarget.src = 'https://images.pexels.com/photos/1488467/pexels-photo-1488467.jpeg?auto=compress&cs=tinysrgb&w=600';
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                          
+                          <div className="absolute top-4 left-4 z-20">
+                            <span className="bg-white/90 backdrop-blur-sm text-[#ad5945] px-4 py-2 rounded-full text-sm font-semibold">
+                              {categoryLabels[portfolio.category] || portfolio.category}
+                            </span>
+                          </div>
+
+                          {portfolio.featured && (
+                            <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                              <svg className="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                              À la une
+                            </div>
+                          )}
+
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-100 scale-75">
+                            <div className={`w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-2xl ${isHovering === `portfolio-${index}` ? 'animate-pulse' : ''}`}>
+                              <ArrowRight className="w-8 h-8 text-[#ad5945]" />
+                            </div>
+                          </div>
+
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#ad5945] to-transparent"></div>
+                            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#d38074] to-transparent"></div>
+                          </div>
                         </div>
-                      )}
-
-                      {portfolio.images && portfolio.images.length > 0 && (
-                        <div className="absolute top-3 left-3 bg-blue-500/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
-                          +{portfolio.images.length} photos
+                        
+                        <div className="p-8 bg-white relative z-10">
+                          <h3 className="font-playfair text-xl font-semibold mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#ad5945] group-hover:to-[#d38074] transition-all tracking-tight">
+                            {portfolio.title}
+                          </h3>
+                          <p className="font-inter text-gray-700 text-sm mb-4 font-light line-clamp-2">
+                            {portfolio.description}
+                          </p>
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="text-gray-500 text-xs font-inter">
+                              {new Date(portfolio.date).toLocaleDateString('fr-FR', {
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric'
+                              })}
+                            </div>
+                            <div className="flex items-center text-[#ad5945] font-inter font-medium text-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-0 group-hover:translate-x-2 tracking-wide">
+                              <span className="mr-2">Découvrir</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </div>
+                          </div>
                         </div>
-                      )}
 
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#ad5945] to-transparent"></div>
-                        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#d38074] to-transparent"></div>
+                        <div 
+                          className="absolute top-4 right-4 w-3 h-3 bg-white/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                          style={{ animation: isHovering === `portfolio-${index}` ? 'pulse 2s ease-in-out infinite' : 'none' }}
+                        ></div>
                       </div>
-                    </div>
-                    
-                    <div className="p-8 bg-white relative z-10">
-                      <h3 className="font-playfair text-xl font-semibold mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#ad5945] group-hover:to-[#d38074] transition-all tracking-tight">
-                        {portfolio.title}
-                      </h3>
-                      <p className="font-inter text-gray-700 text-sm mb-4 font-light line-clamp-2">
-                        {portfolio.description}
-                      </p>
-                      
-                      <div className="flex items-center text-[#ad5945] font-inter font-medium text-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-0 group-hover:translate-x-2 tracking-wide">
-                        <span className="mr-2">Découvrir</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </div>
-                    </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
 
-                    <div 
-                      className="absolute top-4 right-4 w-3 h-3 bg-white/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ animation: isHovering === `portfolio-${index}` ? 'pulse 2s ease-in-out infinite' : 'none' }}
-                    ></div>
-                  </div>
-                ))}
+                {/* Navigation buttons for desktop */}
+                <button className="portfolio-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
+                  <svg className="w-6 h-6 text-[#ad5945]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button className="portfolio-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
+                  <svg className="w-6 h-6 text-[#ad5945]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
               </div>
 
               {/* Mobile Carousel */}
               <div className="md:hidden">
                 <Swiper
                   modules={[Autoplay]}
-                  spaceBetween={16}
-                  slidesPerView={1.2}
+                  spaceBetween={20}
+                  slidesPerView={1.1}
                   centeredSlides={true}
-                  loop={portfolios.length > 1}
+                  loop
                   autoplay={{
                     delay: 4000,
                     disableOnInteraction: false,
@@ -1090,32 +1214,22 @@ professionnelle, nous mettons à votre disposition notre expertise
                 >
                   {portfolios.map((portfolio) => (
                     <SwiperSlide key={portfolio.id}>
-                      <div
-                        className="group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer"
-                        onClick={() => onNavigate('portfolio')}
-                      > 
-                        <div className="relative overflow-hidden">
+                      <div className="group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer">
+                        <div className="relative overflow-hidden h-48">
                           <img
                             src={`https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/${portfolio.image}`}
                             alt={portfolio.title}
-                            className="w-full h-48 object-cover"
+                            className="w-full h-full object-cover"
                             onError={(e) => {
-                              e.currentTarget.src = 'https://images.pexels.com/photos/169198/pexels-photo-169198.jpeg?auto=compress&cs=tinysrgb&w=600';
+                              e.currentTarget.src = 'https://images.pexels.com/photos/1488467/pexels-photo-1488467.jpeg?auto=compress&cs=tinysrgb&w=600';
                             }}
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                          
-                          {portfolio.featured && (
-                            <div className="absolute top-2 right-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-2 py-1 rounded-full text-xs font-semibold">
-                              ★ À la une
-                            </div>
-                          )}
-
-                          {portfolio.images && portfolio.images.length > 0 && (
-                            <div className="absolute top-2 left-2 bg-blue-500/90 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-semibold">
-                              +{portfolio.images.length}
-                            </div>
-                          )}
+                          <div className="absolute top-4 left-4">
+                            <span className="bg-white/90 text-[#ad5945] px-3 py-1 rounded-full text-xs font-semibold">
+                              {categoryLabels[portfolio.category] || portfolio.category}
+                            </span>
+                          </div>
                         </div>
                         
                         <div className="p-6 bg-white">
@@ -1125,10 +1239,18 @@ professionnelle, nous mettons à votre disposition notre expertise
                           <p className="font-inter text-gray-600 text-sm font-light line-clamp-2 mb-3">
                             {portfolio.description}
                           </p>
-                          
-                          <div className="flex items-center text-[#ad5945] font-inter font-medium text-sm tracking-wide">
-                            <span className="mr-2">Découvrir</span>
-                            <ArrowRight className="w-4 h-4" />
+                          <div className="flex items-center justify-between">
+                            <div className="text-gray-500 text-xs font-inter">
+                              {new Date(portfolio.date).toLocaleDateString('fr-FR', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric'
+                              })}
+                            </div>
+                            <div className="flex items-center text-[#ad5945] font-inter font-medium text-sm tracking-wide">
+                              <span className="mr-2">Découvrir</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1137,19 +1259,16 @@ professionnelle, nous mettons à votre disposition notre expertise
                 </Swiper>
               </div>
 
-              {/* Bouton Voir Plus si plus de 6 portfolios */}
-              {portfolios.length > 6 && (
-                <div className="text-center mt-12">
-                  <button
-                    onClick={() => onNavigate('portfolio')}
-                    className="group relative bg-gradient-to-r from-[#ad5945] to-[#d38074] text-white px-10 py-4 rounded-full font-inter font-semibold text-lg hover:shadow-2xl hover:shadow-[#ad5945]/50 transform hover:-translate-y-2 hover:scale-110 transition-all duration-300 inline-flex items-center gap-3 overflow-hidden"
-                  >
-                    <span className="absolute inset-0 bg-gradient-to-r from-[#d38074] to-[#ca715b] translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
-                    <span className="relative z-10 tracking-wide">Voir tous nos portfolios</span>
-                    <ArrowRight className="relative z-10 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-              )}
+              {/* CTA pour voir tous les portfolios */}
+              <div className="text-center mt-12">
+                <button
+                  onClick={() => onNavigate('portfolio')}
+                  className="group relative bg-gradient-to-r from-[#ad5945] to-[#d38074] text-white px-8 py-4 rounded-full font-inter font-semibold text-lg hover:shadow-2xl hover:shadow-[#ad5945]/50 transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 inline-flex items-center gap-3"
+                >
+                  <span>Voir toutes nos réalisations</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
             </>
           )}
         </div>
@@ -1211,6 +1330,10 @@ professionnelle, nous mettons à votre disposition notre expertise
               collection
             </span>
           </h2>
+          
+          <p className="font-inter text-gray-100 text-xl mb-12 max-w-2xl mx-auto leading-relaxed" style={{ animation: 'slideUp 0.8s ease-out 0.2s both' }}>
+            Des fragrances uniques pour sublimer vos moments les plus précieux
+          </p>
 
           <button
             onClick={() => onNavigate('boutique')}
