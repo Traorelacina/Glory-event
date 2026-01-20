@@ -1262,7 +1262,7 @@ professionnelle, nous mettons à votre disposition notre expertise
                 </Swiper>
               </div>
 
-              {/* CTA pour voir tous les portfolios - CORRIGÉ : redirection vers galerie */}
+             
               <div className="text-center mt-12">
                 <button
                   onClick={() => onNavigate('gallery')}
