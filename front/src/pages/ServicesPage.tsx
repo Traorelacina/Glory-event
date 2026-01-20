@@ -3,6 +3,8 @@ import { ArrowRight, Sparkles } from "lucide-react"
 import type { Service } from "../types"
 import Footer from "../components/Footer"
 import decorationImage from '../../images/event1.jpg';
+import locationustensiles from '../../images/assiette.jpeg';
+import locationmobilier from '../../images/table.jpeg';
 
 interface ServicesPageProps {
   onNavigate: (page: string, serviceId?: string) => void
@@ -60,14 +62,14 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       id: "location-ustensiles",
       title: "Location d'Ustensiles",
       description: "Un service complet de location d'ustensiles et d'équipements pour vos événements. De la vaisselle fine aux équipements de cuisine professionnels, nous vous proposons tout le nécessaire pour réussir votre réception.",
-      image: "https://images.pexels.com/photos/6267/menu-restaurant-vintage-table.jpg?auto=compress&cs=tinysrgb&w=1920",
+      image: locationustensiles,
       icon: "https://cdn-icons-png.flaticon.com/512/3502/3502601.png",
     },
     {
       id: "location-mobilier",
       title: "Location de Tables et Chaises",
       description: "Un large choix de mobilier élégant pour aménager vos espaces événementiels. Tables rondes, rectangulaires, chaises design ou classiques, nous adaptons le mobilier à votre thématique et au nombre de vos invités.",
-      image: "https://images.pexels.com/photos/169190/pexels-photo-169190.jpeg?auto=compress&cs=tinysrgb&w=1920",
+      image: locationmobilier,
       icon: "https://cdn-icons-png.flaticon.com/512/2917/2917242.png",
     },
   ]
