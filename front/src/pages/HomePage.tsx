@@ -1026,17 +1026,18 @@ professionnelle, nous mettons à votre disposition notre expertise
         </div>
       </section>
 
-      <section ref={portfolioSectionRef} className="py-24 bg-white" id="portfolio-section">
+      // REMPLACEZ VOTRE SECTION PORTFOLIO PAR CE CODE CORRIGÉ
+
+<section ref={portfolioSectionRef} className="py-24 bg-white" id="portfolio-section">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     {/* En-tête de section avec animations */}
     <div 
       id="portfolio-header"
       data-animate
-      className="text-center mb-20"
+      className="text-center mb-20 transition-all duration-700 ease-out"
       style={{
-        opacity: isVisible['portfolio-header'] ? 1 : 0,
-        transform: isVisible['portfolio-header'] ? 'translateY(0)' : 'translateY(30px)',
-        transition: 'all 0.8s ease-out',
+        opacity: isVisible['portfolio-header'] !== false ? 1 : 0,
+        transform: isVisible['portfolio-header'] !== false ? 'translateY(0)' : 'translateY(30px)',
       }}
     >
       <span className="inline-block bg-gradient-to-r from-[#ad5945] to-[#d38074] text-white px-6 py-3 rounded-full font-inter text-sm font-semibold uppercase tracking-widest mb-6">
@@ -1072,90 +1073,101 @@ professionnelle, nous mettons à votre disposition notre expertise
       </div>
     ) : (
       <>
-        {/* Grid responsive unique */}
+        {/* Grid responsive - CORRIGÉ pour être visible */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {portfolios.slice(0, 6).map((portfolio, index) => (
-            <div
-              key={portfolio.id}
-              id={`portfolio-${index}`}
-              data-animate
-              className="group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer transform hover:-translate-y-2 hover:shadow-xl transition-all duration-300 bg-white border border-gray-100 hover:border-[#ad5945]/20"
-              onClick={() => onNavigate('gallery')}
-              style={{
-                opacity: isVisible[`portfolio-${index}`] ? 1 : 0,
-                transform: isVisible[`portfolio-${index}`] ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.95)',
-                transition: `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.15}s`,
-              }}
-            >
-              {/* Image du portfolio avec overlay et badges */}
-              <div className="relative overflow-hidden h-64">
-                <img
-                  src={`https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/${portfolio.image}`}
-                  alt={portfolio.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  onError={(e) => {
-                    e.currentTarget.src = 'https://images.pexels.com/photos/1488467/pexels-photo-1488467.jpeg?auto=compress&cs=tinysrgb&w=600';
-                  }}
-                />
-                
-                {/* Overlay et effets */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
-                {/* Badge de catégorie - Version simplifiée */}
-                <div className="absolute top-4 left-4 z-20">
-                  <span className="bg-white/95 text-[#ad5945] px-3 py-1.5 rounded-full text-sm font-semibold shadow-sm">
-                    {portfolio.category === 'mariage' ? 'Mariage' : 
-                     portfolio.category === 'corporate' ? 'Corporate' : 
-                     portfolio.category === 'anniversaire' ? 'Anniversaire' : 
-                     portfolio.category === 'evenement_professionnel' ? 'Événement Pro' : 
-                     portfolio.category}
-                  </span>
+          {portfolios.slice(0, 6).map((portfolio, index) => {
+            // CORRECTION CRITIQUE: Rendre visible par défaut
+            const isCardVisible = isVisible[`portfolio-${index}`] !== false;
+            
+            return (
+              <div
+                key={portfolio.id}
+                id={`portfolio-${index}`}
+                data-animate
+                className="group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer bg-white border border-gray-100 hover:border-[#ad5945]/20"
+                onClick={() => onNavigate('gallery')}
+                style={{
+                  // CORRECTION: Visible par défaut avec opacity 1
+                  opacity: isCardVisible ? 1 : 0,
+                  transform: isCardVisible 
+                    ? 'translateY(0) scale(1)' 
+                    : 'translateY(30px) scale(0.95)',
+                  transition: `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.15}s`,
+                  // AJOUT: S'assurer que l'élément est visible
+                  visibility: 'visible',
+                }}
+              >
+                {/* Image du portfolio avec overlay et badges */}
+                <div className="relative overflow-hidden h-64 bg-gray-100">
+                  <img
+                    src={`https://wispy-tabina-lacinafreelance-e4d8a9bf.koyeb.app/${portfolio.image}`}
+                    alt={portfolio.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://images.pexels.com/photos/1488467/pexels-photo-1488467.jpeg?auto=compress&cs=tinysrgb&w=600';
+                    }}
+                  />
+                  
+                  {/* Overlay et effets */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  {/* Badge de catégorie */}
+                  <div className="absolute top-4 left-4 z-20">
+                    <span className="bg-white/95 text-[#ad5945] px-3 py-1.5 rounded-full text-sm font-semibold shadow-sm backdrop-blur-sm">
+                      {portfolio.category === 'mariage' ? 'Mariage' : 
+                       portfolio.category === 'corporate' ? 'Corporate' : 
+                       portfolio.category === 'anniversaire' ? 'Anniversaire' : 
+                       portfolio.category === 'evenement_professionnel' ? 'Événement Pro' : 
+                       portfolio.category}
+                    </span>
+                  </div>
+                  
+                  {/* Badge "À la une" si featured */}
+                  {portfolio.featured && (
+                    <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 shadow-sm">
+                      <svg className="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                      À la une
+                    </div>
+                  )}
+                  
+                  {/* Icône "Voir plus" au hover */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-75 group-hover:scale-100">
+                    <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg">
+                      <ArrowRight className="w-6 h-6 text-[#ad5945]" />
+                    </div>
+                  </div>
                 </div>
                 
-                {/* Badge "À la une" si featured */}
-                {portfolio.featured && (
-                  <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 shadow-sm">
-                    <svg className="w-3 h-3 fill-current" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                    À la une
-                  </div>
-                )}
-                
-                {/* Icône "Voir plus" au hover */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-75 group-hover:scale-100">
-                  <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg">
-                    <ArrowRight className="w-6 h-6 text-[#ad5945]" />
+                {/* Contenu texte */}
+                <div className="p-6 bg-white">
+                  <h3 className="font-playfair text-lg font-semibold mb-2 group-hover:text-[#ad5945] transition-colors duration-300 line-clamp-1">
+                    {portfolio.title}
+                  </h3>
+                  <p className="font-inter text-gray-700 text-sm mb-4 font-light line-clamp-2">
+                    {portfolio.description}
+                  </p>
+                  
+                  {/* Date et "Voir plus" */}
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <div className="text-gray-500 text-xs font-inter">
+                      {new Date(portfolio.date).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                      })}
+                    </div>
+                    <div className="flex items-center text-[#ad5945] font-inter font-medium text-sm opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <span className="mr-2">Voir</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </div>
                   </div>
                 </div>
               </div>
-              
-              {/* Contenu texte */}
-              <div className="p-6 bg-white">
-                <h3 className="font-playfair text-lg font-semibold mb-2 group-hover:text-[#ad5945] transition-colors duration-300">
-                  {portfolio.title}
-                </h3>
-                <p className="font-inter text-gray-700 text-sm mb-4 font-light line-clamp-2">
-                  {portfolio.description}
-                </p>
-                
-                {/* Date et "Voir plus" */}
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                  <div className="text-gray-500 text-xs font-inter">
-                    {new Date(portfolio.date).toLocaleDateString('fr-FR', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric'
-                    })}
-                  </div>
-                  <div className="flex items-center text-[#ad5945] font-inter font-medium text-sm opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <span className="mr-2">Voir</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Bouton CTA */}
@@ -1174,7 +1186,6 @@ professionnelle, nous mettons à votre disposition notre expertise
     )}
   </div>
 </section>
-
       {/* Section Boutique avec animations dynamiques */}
       <section 
         id="boutique-section" 
